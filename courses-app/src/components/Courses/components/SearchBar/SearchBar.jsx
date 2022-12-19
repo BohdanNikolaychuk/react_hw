@@ -2,10 +2,10 @@ import React from 'react';
 
 import { ButtonMain } from '../../../../common/Button/Button';
 import { InpuMain } from '../../../../common/Input/Input';
-import { Container } from '@chakra-ui/react';
-import { Flex, Spacer } from '@chakra-ui/react';
 
-export const SearchBar = ({ inputHandler }) => {
+import { Flex, Spacer, Container } from '@chakra-ui/react';
+
+export const SearchBar = ({ handleOpenModal, inputHandler }) => {
 	return (
 		<Container maxW='2xl'>
 			<Flex p='10px'>
@@ -18,7 +18,10 @@ export const SearchBar = ({ inputHandler }) => {
 					<ButtonMain buttonText='Search'></ButtonMain>
 				</Flex>
 				<Spacer />
-				<ButtonMain buttonText='Add new Course'></ButtonMain>
+				<ButtonMain
+					onClick={handleOpenModal}
+					buttonText='Add new Course'
+				></ButtonMain>
 			</Flex>
 		</Container>
 	);

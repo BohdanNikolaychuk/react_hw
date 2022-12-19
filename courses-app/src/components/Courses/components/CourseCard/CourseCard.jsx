@@ -11,6 +11,8 @@ import {
 } from '@chakra-ui/react';
 import { ButtonMain } from '../../../../common/Button/Button';
 import { mockedAuthorsList } from '../../../../constant/constant';
+import toHoursAndMinutes from '../../../../helpers/toHoursAndMinutes';
+import { formatDate } from '../../../../helpers/formatDate';
 export const CourseCard = ({
 	title,
 	description,
@@ -21,12 +23,13 @@ export const CourseCard = ({
 	const getAuthors = (authorIds) => {
 		return authors.map((authorId, index) => {
 			const author = mockedAuthorsList.find((author) => author.id === authorId);
-
 			if (index === authorIds.length - 1) return author.name;
 			return author.name + ', ';
 		});
 	};
 	const authorText = getAuthors(authors);
+	const formatDuration = toHoursAndMinutes(duration);
+
 	return (
 		<Card m={'20px'}>
 			<Flex>
@@ -44,11 +47,11 @@ export const CourseCard = ({
 						</Text>
 						<Text>
 							<span> creationDate: </span>
-							{duration} hours
+							{formatDuration} hours
 						</Text>
 						<Text>
 							<span> creationDate: </span>
-							{creationDate}
+							{formatDate(creationDate)}
 						</Text>
 					</Stack>
 					<Box display='flex' justifyContent={'center'}>

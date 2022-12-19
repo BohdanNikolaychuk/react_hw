@@ -3,15 +3,23 @@ import { SearchBar } from './components/SearchBar/SearchBar';
 import { CourseCard } from './components/CourseCard/CourseCard';
 import { Container } from '@chakra-ui/react';
 import { mockedCoursesList } from './../../constant/constant';
+import { CreateCourse } from '../CreateCourse/CreateCourse';
+
 export const Courses = () => {
 	const [courses, setCourses] = React.useState(mockedCoursesList);
 	const [Search, setSearch] = React.useState('');
-
+	const [addCourse, setAddCourse] = React.useState(false);
 	let inputHandler = (e) => {
-		//convert input text to lower case
-		var lowerCase = e.target.value.toLowerCase();
+		setSearch(e.target.value.toLowerCase());
+	};
 
-		setSearch(lowerCase);
+	const handleAddCourse = (newCourse) => {
+		console.log(newCourse);
+		setCourses([...courses, newCourse]);
+	};
+
+	const handleOpenModal = () => {
+		setAddCourse(!addCourse);
 	};
 
 	const getCourses = (courses) => {
@@ -32,8 +40,20 @@ export const Courses = () => {
 	const items = getCourses(courses);
 	return (
 		<Container maxW='1220px'>
-			<SearchBar inputHandler={inputHandler}></SearchBar>
-			{items}
+			{addCourse ? (
+				<CreateCourse
+					handleAddCourse={handleAddCourse}
+					handleOpenModal={handleOpenModal}
+				></CreateCourse>
+			) : (
+				<>
+					<SearchBar
+						handleOpenModal={handleOpenModal}
+						inputHandler={inputHandler}
+					></SearchBar>
+					{items}
+				</>
+			)}
 		</Container>
 	);
 };
