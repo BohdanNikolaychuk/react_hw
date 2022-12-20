@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Flex,
   Heading,
@@ -9,6 +9,7 @@ import {
   Switch,
   useColorMode,
   useColorModeValue,
+  Text,
 } from '@chakra-ui/react';
 
 const Login = () => {
@@ -24,6 +25,9 @@ const Login = () => {
         <Button colorScheme="teal" mb={8}>
           Log In
         </Button>
+                <Text mb={6}>
+          If you not have an account you can <Link to="/login">Login</Link>
+        </Text>
         <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="dark_mode" mb="0">
             Enable Dark Mode?

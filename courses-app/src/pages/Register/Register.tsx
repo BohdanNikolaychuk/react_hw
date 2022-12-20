@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 import {
   Flex,
   Heading,
@@ -9,6 +9,7 @@ import {
   Switch,
   useColorMode,
   useColorModeValue,
+  Text
 } from '@chakra-ui/react';
 
 const Register = () => {
@@ -18,12 +19,19 @@ const Register = () => {
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center">
       <Flex flexDirection="column" bg={formBackground} p={12} borderRadius={8} boxShadow="lg">
-        <Heading mb={6}>Register</Heading>
+        <Heading mb={6}>Registration</Heading>
+        <Input placeholder="Name" type="text" variant="filled" mb={6} />
         <Input placeholder="johndoe@gmail.com" type="email" variant="filled" mb={3} />
+
         <Input placeholder="**********" type="password" variant="filled" mb={6} />
         <Button colorScheme="teal" mb={8}>
-         Register
+          Registar
         </Button>
+
+        <Text mb={6}>
+          If you have an account you can <Link to="/login">Login</Link>
+        </Text>
+
         <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="dark_mode" mb="0">
             Enable Dark Mode?

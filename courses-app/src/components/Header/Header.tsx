@@ -1,8 +1,9 @@
 import { Box, Flex, Text, Stack, useColorModeValue,Button } from '@chakra-ui/react';
 import { Logo } from './components/Logo/Logo';
+import { Link } from 'react-router-dom';
 
 
-export default function Header() {
+export default function Header()  {
 	return (
     <Box>
       <Flex
@@ -21,8 +22,10 @@ export default function Header() {
 
         <Text color={useColorModeValue('gray.800', 'white')}>Name</Text>
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Button>Login</Button>
-          <Button>Register</Button>
+          <Link to="/login">
+            Login
+          </Link>
+          <Link to="/register">Register</Link>
         </Stack>
       </Flex>
     </Box>

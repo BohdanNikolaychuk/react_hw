@@ -7,16 +7,16 @@ import {
 	Heading,
 	Divider,
 	Flex,
-	Box,
-  Button
+	Box
 } from '@chakra-ui/react';
-
+import { Link } from 'react-router-dom';
 import { mockedAuthorsList } from '../../../../constant/constant';
 import toHoursAndMinutes from '../../../../helpers/toHoursAndMinutes';
 import { formatDate } from '../../../../helpers/formatDate';
 import { IList } from '../../../../@types/IList';
-import { IAuthors } from '../../../../@types/IAuthors';
+
 export const CourseCard = ({
+  id,
 	title,
 	description,
 	creationDate,
@@ -58,9 +58,7 @@ export const CourseCard = ({
             </Text>
           </Stack>
           <Box display="flex" justifyContent={'center'}>
-            <Button variant="solid" colorScheme="blue">
-              Show course
-            </Button>
+            <Link to={`/courses/${id}`}>Show course</Link>
           </Box>
         </CardBody>
       </Flex>
