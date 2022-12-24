@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardBody, Stack, Text, Heading, Divider, Flex, Box } from '@chakra-ui/react';
+import { Card, CardBody, Stack, Text, Heading, Divider, Flex,  Button } from '@chakra-ui/react';
 import { useParams, Link } from 'react-router-dom';
 import { mockedCoursesList, mockedAuthorsList } from '../../constant/constant';
 import { formatDate } from '../../helpers/formatDate';
@@ -13,6 +13,7 @@ const CourseInfo = () => {
     return course.id === courseId;
   });
 
+  
   const getAuthors = (authorIds: string[]) => {
     return courses?.authors?.map((authorId, index) => {
       const author = mockedAuthorsList.find((author) => author.id === authorId);
@@ -26,7 +27,7 @@ const CourseInfo = () => {
   return (
     <>
       <Card m={'20px'}>
-        <Link to="/courses">Go back</Link>
+        <Button as={Link} to="/courses">Go back</Button>
         <Flex>
           <CardBody w={'100%'}>
             <Stack mt="6" spacing="3">

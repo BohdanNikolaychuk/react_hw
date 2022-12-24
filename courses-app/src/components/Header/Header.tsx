@@ -22,10 +22,10 @@ export default function Header()  {
 
         <Text color={useColorModeValue('gray.800', 'white')}>Name</Text>
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Link to="/login">
+          <Button as={Link} to="/login">
             Login
-          </Link>
-          <Link to="/register">Register</Link>
+          </Button>
+          <Button as={Link} to="/register">Register</Button>
         </Stack>
       </Flex>
     </Box>

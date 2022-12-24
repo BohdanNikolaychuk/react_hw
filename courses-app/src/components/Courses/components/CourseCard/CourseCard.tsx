@@ -7,7 +7,8 @@ import {
 	Heading,
 	Divider,
 	Flex,
-	Box
+	Box,
+  Button
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { mockedAuthorsList } from '../../../../constant/constant';
@@ -24,14 +25,14 @@ export const CourseCard = ({
 	authors,
 }:IList) => {
 	const getAuthors = (authorIds: string[]) => {
-    return authors.map((authorId, index) => {
+    return authors?.map((authorId, index) => {
       const author = mockedAuthorsList.find((author) => author.id === authorId);
       if (index === authorIds.length - 1) return author?.name;
       return author?.name + ', ';
     });
   };
-	const authorText = getAuthors(authors);
-	const formatDuration = toHoursAndMinutes(duration);
+	const authorText = getAuthors(authors!);
+	const formatDuration = toHoursAndMinutes(duration!);
 
 	return (
     <Card m={'20px'}>
@@ -54,11 +55,11 @@ export const CourseCard = ({
             </Text>
             <Text>
               <span> creationDate: </span>
-              {formatDate(creationDate)}
+              {formatDate(creationDate!)}
             </Text>
           </Stack>
           <Box display="flex" justifyContent={'center'}>
-            <Link to={`/courses/${id}`}>Show course</Link>
+            <Button as={Link} to={`/courses/${id}`}>Show course</Button>
           </Box>
         </CardBody>
       </Flex>

@@ -9,15 +9,17 @@ import {
   Box,
   Button,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 
-import toHoursAndMinutes from '../../../../helpers/toHoursAndMinutes';
-import { mockedAuthorsList } from '../../../../constant/constant';
-import createId from '../../../../helpers/createId';
-import { IAuthors } from '../../../../@types/IAuthors';
+import toHoursAndMinutes from '../../helpers/toHoursAndMinutes';
+import { mockedAuthorsList, mockedCoursesList } from '../../constant/constant';
+import createId from '../../helpers/createId';
+import { IAuthors } from '../../@types/IAuthors';
+import { IList } from '../../@types/IList';
 
-export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
+export const CreateCourse = () => {
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
   const [authors, setAuthors] = React.useState<IAuthors[]>(mockedAuthorsList);
@@ -26,29 +28,33 @@ export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
   const [newAuthorName, setNewAuthorName] = React.useState<string>('');
 
   //function
+  const navigate = useNavigate();
 
-  const courseDate = new Date().toLocaleDateString();
+  const handleAddCourse = (newCourse: IList): void => {
+    mockedCoursesList.push(newCourse);
+    navigate('/');
+  };
 
-  let handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let inputValue = e.target.value;
     setTitle(inputValue);
   };
-  let handleDescriptionChange = (e:any) => {
+  let handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     let inputValue = e.target.value;
     setDescription(inputValue);
   };
 
-  let handleAuthorsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let handleAuthorsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let inputValue = e.target.value;
     setNewAuthorName(inputValue);
   };
 
-  let handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let inputValue = e.target.value;
     setDuration(+inputValue);
   };
 
-  const createNewCourse = () => {
+  const createNewCourse = (): void => {
     if (!title || !description || !authors || !selectedAuthors || !duration) {
       alert('error');
     } else {
@@ -61,16 +67,14 @@ export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
         description,
         duration,
         authors: courseAuthors,
-        creationDate: courseDate,
+        creationDate: new Date().toLocaleDateString(),
       };
 
       handleAddCourse(newCourse);
-
-      handleOpenModal();
     }
   };
 
-  const createAuthor = () => {
+  const createAuthor = (): void => {
     if (!newAuthorName) {
       alert('Pass author name');
     } else {
@@ -84,15 +88,15 @@ export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
     }
   };
 
-  const AddAuthors = (id:string) => {
+  const AddAuthors = (id: string) => {
     const selected = authors.find((author) => author.id === id);
     if (selected == null) {
-      return;
+      return <></>;
     }
     setSelectedAuthors([...selectedAuthors, selected]);
   };
 
-  const RemoveAuthors = (id:string) => {
+  const RemoveAuthors = (id: string) => {
     setSelectedAuthors((prev) => prev.filter((author) => author.id !== id));
   };
 
@@ -105,7 +109,9 @@ export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
         <Box w="100%" key={author.id}>
           <Flex justify="space-around">
             <Text align="center">{author.name}</Text>
-            <Button onClick={() => AddAuthors(author.id)}>Add</Button>
+            <Button key={author.id} onClick={() => AddAuthors(author.id)}>
+              Add
+            </Button>
           </Flex>
         </Box>
       );
@@ -133,6 +139,7 @@ export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
 
   const authorsInfo = getAddAuthors(authors);
   const selectedListOfAuthors = hendelSelectedAuthors(selectedAuthors);
+
   return (
     <Container maxW="1220px">
       <FormControl>
@@ -164,9 +171,7 @@ export const CreateCourse = ({ handleAddCourse, handleOpenModal }:any) => {
               placeholder="Author name "
             />
           </FormControl>
-          <Button onClick={createAuthor} >
-            Create Author
-          </Button>
+          <Button onClick={createAuthor}>Create Author</Button>
 
           <FormControl>
             <FormLabel>Duration</FormLabel>
