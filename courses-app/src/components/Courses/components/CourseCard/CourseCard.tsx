@@ -1,40 +1,22 @@
-
-import {
-	Card,
-	CardBody,
-	Stack,
-	Text,
-	Heading,
-	Divider,
-	Flex,
-	Box,
-  Button
-} from '@chakra-ui/react';
+import { Card, CardBody, Stack, Text, Heading, Divider, Flex, Box, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { mockedAuthorsList } from '../../../../constant/constant';
 import toHoursAndMinutes from '../../../../helpers/toHoursAndMinutes';
 import { formatDate } from '../../../../helpers/formatDate';
 import { IList } from '../../../../@types/IList';
 
-export const CourseCard = ({
-  id,
-	title,
-	description,
-	creationDate,
-	duration,
-	authors,
-}:IList) => {
-	const getAuthors = (authorIds: string[]) => {
+export const CourseCard = ({ id, title, description, creationDate, duration, authors }: IList) => {
+  const getAuthors = (authorIds: string[]) => {
     return authors?.map((authorId, index) => {
       const author = mockedAuthorsList.find((author) => author.id === authorId);
       if (index === authorIds.length - 1) return author?.name;
       return author?.name + ', ';
     });
   };
-	const authorText = getAuthors(authors!);
-	const formatDuration = toHoursAndMinutes(duration!);
+  const authorText = getAuthors(authors!);
+  const formatDuration = toHoursAndMinutes(duration!);
 
-	return (
+  return (
     <Card m={'20px'}>
       <Flex>
         <CardBody w={'100%'}>
@@ -59,7 +41,9 @@ export const CourseCard = ({
             </Text>
           </Stack>
           <Box display="flex" justifyContent={'center'}>
-            <Button as={Link} to={`/courses/${id}`}>Show course</Button>
+            <Button as={Link} to={`/course/${id}`}>
+              Show course
+            </Button>
           </Box>
         </CardBody>
       </Flex>

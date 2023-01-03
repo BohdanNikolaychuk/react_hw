@@ -31,7 +31,7 @@ export const SearchBar = ({ inputHandler }: SearchBar) => {
             />
             <Button>Search</Button>
           </Flex>
-          <Button as={Link} to="/create">
+          <Button as={Link} to="course/create">
             Add new Course
           </Button>
         </form>

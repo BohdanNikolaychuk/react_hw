@@ -9,7 +9,7 @@ import {
   Box,
   Button,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 import React from 'react';
 
@@ -146,7 +146,9 @@ export const CreateCourse = () => {
         <FormLabel>Title</FormLabel>
         <Flex minWidth="max-content" justify={'space-between'}>
           <Input onChange={handleTitleChange} value={title} maxW="30%" placeholder="Title" />
-
+          <Button as={NavLink} to="/">
+            To Main
+          </Button>
           <Button onClick={createNewCourse}>Add Course</Button>
         </Flex>
       </FormControl>

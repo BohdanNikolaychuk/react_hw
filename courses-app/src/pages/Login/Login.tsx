@@ -1,9 +1,11 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Flex, Heading, Input, Button, Text } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+
+import { useAuth } from '../../context/authContext';
 
 interface IFormInputs {
   email: string;
@@ -11,6 +13,9 @@ interface IFormInputs {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { isAuth, logIn } = useAuth();
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
@@ -26,32 +31,12 @@ const Login = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  async function logIn(data: IFormInputs) {
-    try {
-      // 👇️ const response: Response
-      const response = await axios.post('http://localhost:4000/login', data);
-
-      // 👇️ const result: CreateUserResponse
-      const result = (await response) as IFormInputs;
-
-      console.log('result is: ', JSON.stringify(result, null, 4));
-
-      return result;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log('error message: ', error.message);
-        return error.message;
-      } else {
-        console.log('unexpected error: ', error);
-        return 'An unexpected error occurred';
-      }
-    }
-  }
-
-  const onSubmit = (data: IFormInputs) => {
-    logIn(data);
+  const onSubmit = async (UserData: IFormInputs) => {
+    logIn(UserData);
   };
-
+  if (isAuth) {
+    navigate('/');
+  }
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center">
       <form onSubmit={handleSubmit(onSubmit)}>

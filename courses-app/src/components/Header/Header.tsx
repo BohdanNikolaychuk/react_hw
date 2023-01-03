@@ -1,10 +1,13 @@
-import { Box, Flex, Text, Stack, useColorModeValue,Button } from '@chakra-ui/react';
+import React from 'react';
+import { Box, Flex, Text, Stack, useColorModeValue, Button } from '@chakra-ui/react';
 import { Logo } from './components/Logo/Logo';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/authContext';
 
+export default function Header() {
+  const { isAuth, logOut, user } = useAuth();
 
-export default function Header()  {
-	return (
+  return (
     <Box>
       <Flex
         bg={useColorModeValue('white', 'gray.800')}
@@ -17,16 +20,35 @@ export default function Header()  {
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Logo></Logo>
+          <NavLink to="/">
+            <Logo></Logo>
+          </NavLink>
         </Flex>
 
-        <Text color={useColorModeValue('gray.800', 'white')}>Name</Text>
-        <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Button as={Link} to="/login">
-            Login
-          </Button>
-          <Button as={Link} to="/register">Register</Button>
-        </Stack>
+        {isAuth ? (
+          <>
+            <Text color={useColorModeValue('gray.800', 'white')}>{user?.name}</Text>
+            <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
+              <Button as={NavLink} to="/" onClick={logOut}>
+                LogOut
+              </Button>
+              <Button as={NavLink} to="/register">
+                Profile
+              </Button>
+            </Stack>
+          </>
+        ) : (
+          <>
+            <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
+              <Button as={NavLink} to="/login">
+                Login
+              </Button>
+              <Button as={NavLink} to="/register">
+                Register
+              </Button>
+            </Stack>
+          </>
+        )}
       </Flex>
     </Box>
   );

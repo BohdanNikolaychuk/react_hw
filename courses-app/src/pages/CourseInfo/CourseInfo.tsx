@@ -1,23 +1,22 @@
-
 import React from 'react';
-import { Card, CardBody, Stack, Text, Heading, Divider, Flex,  Button } from '@chakra-ui/react';
-import { useParams, Link } from 'react-router-dom';
+import { Card, CardBody, Stack, Text, Heading, Divider, Flex, Button } from '@chakra-ui/react';
+import { useParams, NavLink } from 'react-router-dom';
 import { mockedCoursesList, mockedAuthorsList } from '../../constant/constant';
 import { formatDate } from '../../helpers/formatDate';
 import toHoursAndMinutes from './../../helpers/toHoursAndMinutes';
 const CourseInfo = () => {
   const { courseId } = useParams();
 
-
-  const courses  = mockedCoursesList.find((course) => {
+  const courses = mockedCoursesList.find((course) => {
     return course.id === courseId;
   });
 
-  
   const getAuthors = (authorIds: string[]) => {
     return courses?.authors?.map((authorId, index) => {
       const author = mockedAuthorsList.find((author) => author.id === authorId);
-      if (index === authorIds.length - 1) return author?.name;
+      if (index === authorIds.length - 1) {
+        return author?.name;
+      }
       return author?.name + ', ';
     });
   };
@@ -27,7 +26,9 @@ const CourseInfo = () => {
   return (
     <>
       <Card m={'20px'}>
-        <Button as={Link} to="/courses">Go back</Button>
+        <Button as={NavLink} to="/">
+          Go back
+        </Button>
         <Flex>
           <CardBody w={'100%'}>
             <Stack mt="6" spacing="3">
@@ -40,7 +41,6 @@ const CourseInfo = () => {
               <Text>
                 <span> ID:{courses?.id} </span>
               </Text>
-
               <Text>
                 <span> Duration:{toHoursAndMinutes(courses?.duration as number)} </span>
               </Text>
