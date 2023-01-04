@@ -10,8 +10,8 @@ import { ILogin } from '../../@types/IAuth';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { error, isAuth, logIn } = useAuth();
-  const [ErrorMassage, setErrorMassage] = React.useState(error);
+  const { error, errorStatus, isAuth, logIn } = useAuth();
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
@@ -37,7 +37,18 @@ const Login = () => {
     navigate('/');
   }
 
-  console.log(ErrorMassage);
+  const ErrorView = () => {
+    return (
+      !!error && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )
+    );
+  };
+
+  let errorView = ErrorView();
 
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center">
@@ -79,15 +90,7 @@ const Login = () => {
             </Alert>
           )}
 
-          {error ? (
-            <Alert status="error">
-              <AlertIcon />
-
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          ) : (
-            <></>
-          )}
+          {errorView}
 
           <Button disabled={!isValid} type="submit" colorScheme="teal" mb={8}>
             Log In

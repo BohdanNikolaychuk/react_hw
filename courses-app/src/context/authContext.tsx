@@ -14,7 +14,7 @@ interface IAuthContext {
   isAuth: boolean;
   user: USER | null;
   error: string;
-
+  errorStatus: boolean;
   signUp: (body: IRegistration) => void;
   logIn: (body: ILogin) => void;
   logOut: () => void;
@@ -30,6 +30,7 @@ type ErrorData = {
 
 type Error = {
   result: string;
+  successful: boolean;
 };
 
 const AuthContext = createContext({} as IAuthContext);
@@ -45,7 +46,8 @@ type Props = {
 export function AuthProvider({ children }: Props) {
   const [userState, setUserState] = React.useState({
     user: null,
-    error: '',
+    errorText: '',
+    errorStatus: false,
   });
   const { loginUser, registerUser, getUser } = useAuthService();
   const { token, setToken, deleteToken } = useToken();
@@ -72,9 +74,10 @@ export function AuthProvider({ children }: Props) {
         setUserState({ ...userState, user: res.user });
       }
     } catch (error) {
-      console.log();
-      let e = (error as ErrorResponse).response.data.result;
-      setUserState({ ...userState, error: e });
+      let errorResult = (error as ErrorResponse).response.data.result;
+      let errorStatus = (error as ErrorResponse).response.data.successful;
+
+      setUserState({ ...userState, errorText: errorResult, errorStatus: errorStatus });
     }
   };
 
@@ -98,8 +101,8 @@ export function AuthProvider({ children }: Props) {
       value={{
         isAuth: !!token,
         user: userState.user,
-        error: userState.error,
-
+        error: userState.errorText,
+        errorStatus: userState.errorStatus,
         signUp,
         logIn,
         logOut,
