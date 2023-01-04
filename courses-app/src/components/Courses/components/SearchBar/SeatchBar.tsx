@@ -29,7 +29,7 @@ export const SearchBar = ({ inputHandler }: SearchBar) => {
               m="10px"
               placeholder="Enter course id or name"
             />
-            <Button>Search</Button>
+            <Button type="submit">Search</Button>
           </Flex>
           <Button as={Link} to="course/create">
             Add new Course

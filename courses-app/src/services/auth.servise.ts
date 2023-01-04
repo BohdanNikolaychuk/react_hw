@@ -1,24 +1,20 @@
 import axios from '../utils/axios';
 
 import React from 'react';
+import { ILogin, IRegistration } from '../@types/IAuth';
+
 const useAuthService = () => {
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState('');
 
-  const loginUser = async (UserData: any) => {
+  const loginUser = async (UserData: ILogin) => {
     setLoading(true);
 
-    try {
-      const { data } = await axios.post('login', UserData);
-      setLoading(false);
-      return data;
-    } catch (error) {
-      setLoading(false);
-      setError(error as string);
-    }
+    const { data } = await axios.post('login', UserData);
+    setLoading(false);
+    return data;
   };
 
-  const registerUser = async (body: any) => {
+  const registerUser = async (body: IRegistration) => {
     setLoading(true);
 
     try {
@@ -28,7 +24,6 @@ const useAuthService = () => {
       return data;
     } catch (error) {
       setLoading(false);
-      setError(error as string);
     }
   };
 
@@ -41,12 +36,10 @@ const useAuthService = () => {
       return data;
     } catch (error) {
       setLoading(false);
-      setError(error as string);
     }
   };
 
   return {
-    error,
     loading,
     loginUser,
     registerUser,

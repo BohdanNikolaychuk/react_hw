@@ -1,17 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Flex, Heading, Input, Button, Text } from '@chakra-ui/react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import axios from 'axios';
 
-interface IFormInputs {
-  name: string;
-  email: string;
-  password: string;
-}
+import { useAuth } from '../../context/authContext';
+import { IRegistration } from '../../@types/IAuth';
 
 const Register: React.FC = () => {
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email is invalid'),
@@ -24,38 +23,17 @@ const Register: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInputs>({
+  } = useForm<IRegistration>({
     resolver: yupResolver(validationSchema),
   });
 
-  async function createUser(data: IFormInputs) {
+  const onSubmit = (data: IRegistration) => {
     try {
-      // 👇️ const response: Response
-      const response = await axios.post('http://localhost:4000/register', data);
-
-      if (!response.ok) {
-        throw new Error(`Error! status: ${response.status}`);
-      }
-
-      // 👇️ const result: CreateUserResponse
-      const result = (await response) as IFormInputs;
-
-      console.log('result is: ', JSON.stringify(result, null, 4));
-
-      return result;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log('error message: ', error.message);
-        return error.message;
-      } else {
-        console.log('unexpected error: ', error);
-        return 'An unexpected error occurred';
-      }
+      signUp(data);
+      navigate('/login');
+    } catch (e) {
+      console.log(e);
     }
-  }
-
-  const onSubmit = (data: IFormInputs) => {
-    createUser(data);
   };
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center">

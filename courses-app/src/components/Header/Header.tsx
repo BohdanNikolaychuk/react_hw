@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Flex, Text, Stack, useColorModeValue, Button } from '@chakra-ui/react';
 import { Logo } from './components/Logo/Logo';
 import { NavLink } from 'react-router-dom';
@@ -27,13 +26,12 @@ export default function Header() {
 
         {isAuth ? (
           <>
-            <Text color={useColorModeValue('gray.800', 'white')}>{user?.name}</Text>
+            <Text p={2} color={useColorModeValue('gray.800', 'white')}>
+              {user?.name}
+            </Text>
             <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
               <Button as={NavLink} to="/" onClick={logOut}>
                 LogOut
-              </Button>
-              <Button as={NavLink} to="/register">
-                Profile
               </Button>
             </Stack>
           </>

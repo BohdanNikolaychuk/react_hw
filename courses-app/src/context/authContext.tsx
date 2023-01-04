@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContext, useContext } from 'react';
+import { ILogin, IRegistration } from '../@types/IAuth';
 import useToken from '../hooks/useLocalStorage';
 
 import useAuthService from '../services/auth.servise';
@@ -12,10 +13,24 @@ type USER = {
 interface IAuthContext {
   isAuth: boolean;
   user: USER | null;
-  signUp: (body: any) => void;
-  logIn: (body: any) => void;
-  logOut: (body: any) => void;
+  error: string;
+
+  signUp: (body: IRegistration) => void;
+  logIn: (body: ILogin) => void;
+  logOut: () => void;
 }
+
+type ErrorResponse = {
+  response: ErrorData;
+};
+
+type ErrorData = {
+  data: Error;
+};
+
+type Error = {
+  result: string;
+};
 
 const AuthContext = createContext({} as IAuthContext);
 
@@ -23,18 +38,15 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-const initialState = {
-  user: null,
-  isLoading: false,
-  error: '',
-};
-
 type Props = {
   children: JSX.Element;
 };
 
 export function AuthProvider({ children }: Props) {
-  const [userState, setUserState] = React.useState(initialState);
+  const [userState, setUserState] = React.useState({
+    user: null,
+    error: '',
+  });
   const { loginUser, registerUser, getUser } = useAuthService();
   const { token, setToken, deleteToken } = useToken();
 
@@ -44,20 +56,25 @@ export function AuthProvider({ children }: Props) {
     }
   }, []);
 
-  const signUp = async (body: any) => {
+  const signUp = async (body: IRegistration) => {
     const { token } = await registerUser(body);
     if (token) {
       await getUser();
     }
   };
 
-  const logIn = async (body: any) => {
-    const res = await loginUser(body);
+  const logIn = async (body: ILogin) => {
+    try {
+      const res = await loginUser(body);
 
-    if (res.successful) {
-      setToken(res.result);
-
-      setUserState({ ...userState, user: res.user });
+      if (res.successful) {
+        setToken(res.result);
+        setUserState({ ...userState, user: res.user });
+      }
+    } catch (error) {
+      console.log();
+      let e = (error as ErrorResponse).response.data.result;
+      setUserState({ ...userState, error: e });
     }
   };
 
@@ -81,6 +98,8 @@ export function AuthProvider({ children }: Props) {
       value={{
         isAuth: !!token,
         user: userState.user,
+        error: userState.error,
+
         signUp,
         logIn,
         logOut,
