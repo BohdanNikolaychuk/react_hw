@@ -1,15 +1,19 @@
-import { Layout } from './components/Layout/Layout';
+import { Provider } from 'react-redux';
 
 import { RouterProvider } from 'react-router-dom';
-import { Courses } from './components/Courses/Courses';
-import CourseInfo from './pages/CourseInfo/CourseInfo';
-import Login from './pages/Login/Login';
-import Register from './pages/Register/Register';
-import { CreateCourse } from './pages/CreateCourse/CreateCourse';
+
 import { router } from './router/Router';
 
+import store from './store/store';
+
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <>
+      <Provider store={store}>
+        <RouterProvider router={router}></RouterProvider>
+      </Provider>
+    </>
+  );
 }
 
 export default App;

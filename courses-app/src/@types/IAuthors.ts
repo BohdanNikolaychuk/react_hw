@@ -1,5 +1,4 @@
-export interface IAuthors{
-  id:string;
-  name:string;
-  
+export interface IAuthors {
+  id: string;
+  name: string;
 }

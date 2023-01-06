@@ -4,16 +4,24 @@ import { useParams, NavLink } from 'react-router-dom';
 import { mockedCoursesList, mockedAuthorsList } from '../../constant/constant';
 import { formatDate } from '../../helpers/formatDate';
 import toHoursAndMinutes from './../../helpers/toHoursAndMinutes';
+
+import { selectCoursesData } from '../../store/courses/selectors';
+
+import { useSelector } from 'react-redux';
+import { selectAuthorsData } from '../../store/authors/selectors';
+
 const CourseInfo = () => {
   const { courseId } = useParams();
+  const { items, status } = useSelector(selectCoursesData);
+  const { authorsList } = useSelector(selectAuthorsData);
 
-  const courses = mockedCoursesList.find((course) => {
+  const courses = items.find((course) => {
     return course.id === courseId;
   });
 
   const getAuthors = (authorIds: string[]) => {
-    return courses?.authors?.map((authorId, index) => {
-      const author = mockedAuthorsList.find((author) => author.id === authorId);
+    return courses?.authors?.map((authorIds, index) => {
+      const author = authorsList.find((author) => author.id === authorIds);
       if (index === authorIds.length - 1) {
         return author?.name;
       }
