@@ -5,13 +5,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
-import { useAuth } from '../../context/authContext';
+
 import { ILogin } from '../../@types/IAuth';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { userLogin } from '../../store/user/asyncActions';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { error, errorStatus, isAuth, logIn } = useAuth();
 
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAppSelector((state) => state.auth);
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
@@ -30,7 +33,8 @@ const Login = () => {
 
   const onSubmit = async (UserData: ILogin) => {
     try {
-      logIn(UserData);
+      // logIn(UserData);
+      dispatch(userLogin(UserData));
     } catch (e) {}
   };
   if (isAuth) {
@@ -38,14 +42,14 @@ const Login = () => {
   }
 
   const ErrorView = () => {
-    return (
-      !!error && (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )
-    );
+    // return (
+    //   !!error && (
+    //     <Alert status="error">
+    //       <AlertIcon />
+    //       <AlertDescription>{error}</AlertDescription>
+    //     </Alert>
+    //   )
+    // );
   };
 
   let errorView = ErrorView();
@@ -90,7 +94,7 @@ const Login = () => {
             </Alert>
           )}
 
-          {errorView}
+          {/* {errorView} */}
 
           <Button disabled={!isValid} type="submit" colorScheme="teal" mb={8}>
             Log In

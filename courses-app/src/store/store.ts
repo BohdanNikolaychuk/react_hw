@@ -3,10 +3,13 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 
 import courses from './courses/slice';
 import authors from './authors/slice';
+import auth from './user/slice';
+
 const store = configureStore({
   reducer: {
     courses,
     authors,
+    auth,
   },
 });
 

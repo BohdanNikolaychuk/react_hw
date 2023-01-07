@@ -7,14 +7,11 @@ export default function useToken() {
     return token;
   });
 
-
-
   useEffect(() => {
     if (token !== null) {
-      localStorage.setItem('token', token);
+      localStorage.setItem('userToken', token);
     }
-
-  }, [token, ]);
+  }, [token]);
 
   const deleteToken = () => {
     setToken(null);
@@ -22,5 +19,5 @@ export default function useToken() {
     localStorage.removeItem('token');
   };
 
-  return { token,  setToken, deleteToken };
+  return { token, setToken, deleteToken };
 }

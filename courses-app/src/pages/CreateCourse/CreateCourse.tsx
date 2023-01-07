@@ -17,23 +17,26 @@ import toHoursAndMinutes from '../../helpers/toHoursAndMinutes';
 import { mockedAuthorsList, mockedCoursesList } from '../../constant/constant';
 import createId from '../../helpers/createId';
 import { IAuthors } from '../../@types/IAuthors';
-import { IList } from '../../@types/IList';
+
+import { selectAuthorsData } from '../../store/authors/selectors';
+import { useSelector } from 'react-redux';
+import { FetchAddCourse } from '../../store/courses/slice';
+import { useAppDispatch } from '../../store/store';
+import axios from '../../utils/axios';
 
 export const CreateCourse = () => {
+  const { authorsList } = useSelector(selectAuthorsData);
+  const dispatch = useAppDispatch();
+
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
-  const [authors, setAuthors] = React.useState<IAuthors[]>(mockedAuthorsList);
+  const [authors, setAuthors] = React.useState<IAuthors[]>(authorsList);
   const [selectedAuthors, setSelectedAuthors] = React.useState<IAuthors[]>([]);
   const [duration, setDuration] = React.useState<number>(0);
   const [newAuthorName, setNewAuthorName] = React.useState<string>('');
 
   //function
   const navigate = useNavigate();
-
-  const handleAddCourse = (newCourse: IList): void => {
-    mockedCoursesList.push(newCourse);
-    navigate('/');
-  };
 
   let handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let inputValue = e.target.value;
@@ -54,7 +57,7 @@ export const CreateCourse = () => {
     setDuration(+inputValue);
   };
 
-  const createNewCourse = (): void => {
+  const createNewCourse = async () => {
     if (!title || !description || !authors || !selectedAuthors || !duration) {
       alert('error');
     } else {
@@ -70,7 +73,18 @@ export const CreateCourse = () => {
         creationDate: new Date().toLocaleDateString(),
       };
 
-      handleAddCourse(newCourse);
+      const Mock = {
+        title: '123123',
+        description: '1123123',
+        duration: 1222,
+        authors: ['40b21bd5-cbae-4f33-b154-0252b1ae03a9'],
+      };
+
+      // let a = await axios.post('/course/add', newCourse);
+      // console.log(a);
+
+      // dispatch(FetchAddCourse(newCourse));
+      // navigate('/');
     }
   };
 

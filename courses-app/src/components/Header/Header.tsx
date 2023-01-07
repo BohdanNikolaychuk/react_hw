@@ -1,10 +1,11 @@
 import { Box, Flex, Text, Stack, useColorModeValue, Button } from '@chakra-ui/react';
 import { Logo } from './components/Logo/Logo';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../context/authContext';
+
+import { useAppSelector } from '../../store/store';
 
 export default function Header() {
-  const { isAuth, logOut, user } = useAuth();
+  const { isAuth, userName } = useAppSelector((state) => state.auth);
 
   return (
     <Box>
@@ -27,10 +28,10 @@ export default function Header() {
         {isAuth ? (
           <>
             <Text p={2} color={useColorModeValue('gray.800', 'white')}>
-              {user?.name}
+              {userName}
             </Text>
             <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-              <Button as={NavLink} to="/" onClick={logOut}>
+              <Button as={NavLink} to="/">
                 LogOut
               </Button>
             </Stack>

@@ -7,7 +7,7 @@ const instans = axios.create({
 instans.interceptors.request.use(async (config: AxiosRequestConfig) => {
   config.headers = config.headers ?? {};
 
-  config.headers.Authorization = window.localStorage.getItem('token');
+  config.headers.Authorization = window.localStorage.getItem('userToken');
 
   return config;
 });

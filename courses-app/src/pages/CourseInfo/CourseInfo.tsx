@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardBody, Stack, Text, Heading, Divider, Flex, Button } from '@chakra-ui/react';
 import { useParams, NavLink } from 'react-router-dom';
-import { mockedCoursesList, mockedAuthorsList } from '../../constant/constant';
+
 import { formatDate } from '../../helpers/formatDate';
 import toHoursAndMinutes from './../../helpers/toHoursAndMinutes';
 
@@ -12,7 +12,7 @@ import { selectAuthorsData } from '../../store/authors/selectors';
 
 const CourseInfo = () => {
   const { courseId } = useParams();
-  const { items, status } = useSelector(selectCoursesData);
+  const { items } = useSelector(selectCoursesData);
   const { authorsList } = useSelector(selectAuthorsData);
 
   const courses = items.find((course) => {

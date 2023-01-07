@@ -14,14 +14,14 @@ import { IAuthors } from '../../../../@types/IAuthors';
 
 export const CourseCard = ({ id, title, description, creationDate, duration, authors }: IList) => {
   const dispatch = useAppDispatch();
-  const { authorsList, status } = useSelector(selectAuthorsData);
+  const { authorsList } = useSelector(selectAuthorsData);
 
   const getAllAuthors = () => {
     dispatch(FetchAllAuthors());
   };
 
   React.useEffect(() => {
-    getAllAuthors();
+    if (!authorsList.length) getAllAuthors();
   }, []);
 
   const getCourseAuthors = (authors: IAuthors[], courseAuthors: string[]) => {

@@ -5,17 +5,19 @@ import { Container } from '@chakra-ui/react';
 import { Box, SkeletonText } from '@chakra-ui/react';
 
 import { IList } from '../../@types/IList';
-import { useAuth } from '../../context/authContext';
-import { useAppDispatch } from '../../store/store';
+
+import { useAppDispatch, useAppSelector } from '../../store/store';
 import { useSelector } from 'react-redux';
 import { selectCoursesData } from '../../store/courses/selectors';
 import { FetchAllCourses } from '../../store/courses/asyncActions';
+import { getCurrentUser } from '../../store/user/asyncActions';
+import axios from '../../utils/axios';
 
 export const Courses: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { items, status } = useSelector(selectCoursesData);
-  const { isAuth } = useAuth();
+  const { items } = useSelector(selectCoursesData);
 
+  const { isAuth, userToken } = useAppSelector((state) => state.auth);
   const [Search, setSearch] = React.useState<string>('');
 
   //FUNC
@@ -25,7 +27,13 @@ export const Courses: React.FC = () => {
   };
 
   React.useEffect(() => {
-    getAllCourses();
+    if (localStorage.getItem('userToken')) {
+      dispatch(getCurrentUser());
+    }
+
+    if (!items.length) {
+      getAllCourses();
+    }
   }, []);
 
   let inputHandler = (filter: string): void => {

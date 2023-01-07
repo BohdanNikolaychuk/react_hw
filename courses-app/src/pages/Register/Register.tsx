@@ -4,12 +4,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
-import { useAuth } from '../../context/authContext';
 import { IRegistration } from '../../@types/IAuth';
 
+import { registerUser } from '../../store/user/asyncActions';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+
 const Register: React.FC = () => {
-  const { signUp } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -29,7 +31,7 @@ const Register: React.FC = () => {
 
   const onSubmit = (data: IRegistration) => {
     try {
-      signUp(data);
+      dispatch(registerUser(data));
       navigate('/login');
     } catch (e) {
       console.log(e);
