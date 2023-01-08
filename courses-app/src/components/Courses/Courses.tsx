@@ -11,29 +11,22 @@ import { useSelector } from 'react-redux';
 import { selectCoursesData } from '../../store/courses/selectors';
 import { FetchAllCourses } from '../../store/courses/asyncActions';
 import { getCurrentUser } from '../../store/user/asyncActions';
-import axios from '../../utils/axios';
+import { selectAuthData } from '../../store/user/selectors';
 
 export const Courses: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items } = useSelector(selectCoursesData);
 
-  const { isAuth, userToken } = useAppSelector((state) => state.auth);
+  const { isAuth } = useAppSelector(selectAuthData);
   const [Search, setSearch] = React.useState<string>('');
 
   //FUNC
 
-  const getAllCourses = () => {
-    dispatch(FetchAllCourses());
-  };
-
   React.useEffect(() => {
-    if (localStorage.getItem('userToken')) {
+    if (isAuth) {
       dispatch(getCurrentUser());
     }
-
-    if (!items.length) {
-      getAllCourses();
-    }
+    if (!items.length) dispatch(FetchAllCourses());
   }, []);
 
   let inputHandler = (filter: string): void => {
@@ -45,22 +38,10 @@ export const Courses: React.FC = () => {
       return <div>There is no courses yet</div>;
     }
     return courses.map((course) => {
-      const courseId = course?.id?.toLowerCase();
       const courseTitle = course?.title?.toLowerCase();
-      return courseId?.includes(Search) || courseTitle?.includes(Search) ? (
-        <CourseCard key={course.id} {...course} />
-      ) : (
-        <></>
-      );
+      return courseTitle?.includes(Search) ? <CourseCard key={course.id} {...course} /> : <></>;
     });
   };
-
-  // const skeleton = [...new Array(3)].map((_, idex) => {
-  //   <Box padding="6" boxShadow="lg" bg="white">
-  //     <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-  //     <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-  //   </Box>;
-  // });
 
   const Allcourses = getCourses(items);
 

@@ -14,23 +14,23 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import React from 'react';
 
 import toHoursAndMinutes from '../../helpers/toHoursAndMinutes';
-import { mockedAuthorsList, mockedCoursesList } from '../../constant/constant';
 import createId from '../../helpers/createId';
 import { IAuthors } from '../../@types/IAuthors';
 
 import { selectAuthorsData } from '../../store/authors/selectors';
 import { useSelector } from 'react-redux';
-import { FetchAddCourse } from '../../store/courses/slice';
+import { addCourse } from '../../store/courses/slice';
 import { useAppDispatch } from '../../store/store';
-import axios from '../../utils/axios';
+import { addAuthor } from '../../store/authors/slice';
+import { ROUTES } from '../../router/_Routes';
 
 export const CreateCourse = () => {
   const { authorsList } = useSelector(selectAuthorsData);
+
   const dispatch = useAppDispatch();
 
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
-  const [authors, setAuthors] = React.useState<IAuthors[]>(authorsList);
   const [selectedAuthors, setSelectedAuthors] = React.useState<IAuthors[]>([]);
   const [duration, setDuration] = React.useState<number>(0);
   const [newAuthorName, setNewAuthorName] = React.useState<string>('');
@@ -58,33 +58,23 @@ export const CreateCourse = () => {
   };
 
   const createNewCourse = async () => {
-    if (!title || !description || !authors || !selectedAuthors || !duration) {
-      alert('error');
+    if (!title || !description || !authorsList || !selectedAuthors || !duration) {
+      alert('Add all fileds');
     } else {
       const courseAuthors =
         selectedAuthors.length > 0 ? selectedAuthors.map((author) => author.id) : [];
 
-      const newCourse = {
-        id: createId(),
-        title,
-        description,
-        duration,
-        authors: courseAuthors,
-        creationDate: new Date().toLocaleDateString(),
-      };
-
-      const Mock = {
-        title: '123123',
-        description: '1123123',
-        duration: 1222,
-        authors: ['40b21bd5-cbae-4f33-b154-0252b1ae03a9'],
-      };
-
-      // let a = await axios.post('/course/add', newCourse);
-      // console.log(a);
-
-      // dispatch(FetchAddCourse(newCourse));
-      // navigate('/');
+      dispatch(
+        addCourse({
+          id: createId(),
+          title,
+          description,
+          duration,
+          authors: courseAuthors,
+          creationDate: new Date().toLocaleDateString(),
+        }),
+      );
+      navigate(ROUTES.courses);
     }
   };
 
@@ -96,14 +86,13 @@ export const CreateCourse = () => {
         id: createId(),
         name: newAuthorName,
       };
-      mockedAuthorsList.push(newAuthors);
-      setAuthors([...mockedAuthorsList]);
+      dispatch(addAuthor(newAuthors));
       setNewAuthorName('');
     }
   };
 
   const AddAuthors = (id: string) => {
-    const selected = authors.find((author) => author.id === id);
+    const selected = authorsList.find((author) => author.id === id);
     if (selected == null) {
       return <></>;
     }
@@ -151,7 +140,7 @@ export const CreateCourse = () => {
     });
   };
 
-  const authorsInfo = getAddAuthors(authors);
+  const authorsInfo = getAddAuthors(authorsList);
   const selectedListOfAuthors = hendelSelectedAuthors(selectedAuthors);
 
   return (

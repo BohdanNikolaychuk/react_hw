@@ -1,23 +1,30 @@
-import { Box, Flex, Text, Stack, useColorModeValue, Button } from '@chakra-ui/react';
+import { Box, Flex, Text, Stack, Button } from '@chakra-ui/react';
 import { Logo } from './components/Logo/Logo';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
-import { useAppSelector } from '../../store/store';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { LogOut } from '../../store/user/asyncActions';
+import { selectAuthData } from '../../store/user/selectors';
+import { ROUTES } from '../../router/_Routes';
 
 export default function Header() {
-  const { isAuth, userName } = useAppSelector((state) => state.auth);
+  const { isAuth, userName } = useAppSelector(selectAuthData);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    dispatch(LogOut());
+    navigate(ROUTES.courses);
+  };
 
   return (
     <Box>
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
-        color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
         borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <NavLink to="/">
@@ -27,13 +34,9 @@ export default function Header() {
 
         {isAuth ? (
           <>
-            <Text p={2} color={useColorModeValue('gray.800', 'white')}>
-              {userName}
-            </Text>
+            <Text p={2}>{userName}</Text>
             <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-              <Button as={NavLink} to="/">
-                LogOut
-              </Button>
+              <Button onClick={logOut}>LogOut</Button>
             </Stack>
           </>
         ) : (

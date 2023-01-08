@@ -26,20 +26,20 @@ export const registerUser = createAsyncThunk(
 
 export const userLogin = createAsyncThunk(
   'auth/login',
-  async ({ email, password }: ILogin, { rejectWithValue }) => {
+  async (UserData: ILogin, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.post(`login`, { email, password }, config);
+      const { data } = await axios.post(`login`, UserData, config);
 
       localStorage.setItem('userToken', data.result);
       return data;
     } catch (error) {
-      // // return custom error message from API if any
-      // if (error.response && error.response.data.message) {
+      // return custom error message from API if any
+      // if (error.response && error.response.result) {
       //   return rejectWithValue(error.response.data.message);
       // } else {
       //   return rejectWithValue(error.message);
@@ -50,14 +50,28 @@ export const userLogin = createAsyncThunk(
 
 export const getCurrentUser = createAsyncThunk('auth/me', async () => {
   try {
+    const data = await axios.get(`users/me`);
+
+    return data;
+  } catch (error) {
+    // // return custom error message from API if any
+    // if (error.response && error.response.data.message) {
+    //   return rejectWithValue(error.response.data.message);
+    // } else {
+    //   return rejectWithValue(error.message);
+    // }
+  }
+});
+
+export const LogOut = createAsyncThunk('auth/LogOut', async () => {
+  try {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    const data = await axios.get(`users/me`, config);
-    console.log(data);
-
+    const data = await axios.delete(`/logout`, config);
+    localStorage.clear();
     return data;
   } catch (error) {
     // // return custom error message from API if any

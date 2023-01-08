@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { selectAuthorsData } from '../../../../store/authors/selectors';
 import { FetchAllAuthors } from '../../../../store/authors/asyncActions';
 import { IAuthors } from '../../../../@types/IAuthors';
-
+import { removeCourse } from '../../../../store/courses/slice';
 export const CourseCard = ({ id, title, description, creationDate, duration, authors }: IList) => {
   const dispatch = useAppDispatch();
   const { authorsList } = useSelector(selectAuthorsData);
@@ -26,19 +26,22 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
 
   const getCourseAuthors = (authors: IAuthors[], courseAuthors: string[]) => {
     if (courseAuthors) {
-      return courseAuthors.map((courseAuthorId, index) => {
-        const author = authors.find((author) => author.id === courseAuthorId);
+      return courseAuthors.map((AuthorId, index) => {
+        const author = authors.find((author) => author.id === AuthorId);
 
-        if (author == null) return '';
+        if (!author) {
+          return '';
+        }
 
-        if (index === courseAuthors.length - 1) return author.name;
-        return author.name + ', ';
+        if (index === courseAuthors.length - 1) {
+          return author.name;
+        }
+        return author.name + ',';
       });
     }
   };
 
   const authorText = getCourseAuthors(authorsList, authors!);
-  const formatDuration = toHoursAndMinutes(duration!);
 
   return (
     <Card m={'20px'}>
@@ -57,7 +60,7 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
             </Text>
             <Text>
               <span> creationDate: </span>
-              {formatDuration} hours
+              {toHoursAndMinutes(duration!)} hours
             </Text>
             <Text>
               <span> creationDate: </span>
@@ -68,6 +71,8 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
             <Button as={Link} to={`/course/${id}`}>
               Show course
             </Button>
+            <Button onClick={() => dispatch(removeCourse(id))}>Delete</Button>
+            <Button onClick={() => dispatch(removeCourse(id))}>Edit</Button>
           </Box>
         </CardBody>
       </Flex>

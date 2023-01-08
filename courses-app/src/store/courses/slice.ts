@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { IList } from '../../@types/IList';
 
@@ -18,10 +18,7 @@ const initialState: State = {
 export const FetchAddCourse = createAsyncThunk(
   'courses/fetchAddCourse',
   async function (params: any, { rejectWithValue, dispatch }) {
-    console.log(params);
-
     const res = await axios.post('http://localhost:4000​/courses​/add', params);
-    console.log('🚀 ~ file: slice.ts:23 ~ res', res);
   },
 );
 
@@ -29,11 +26,11 @@ const CoursesSlice = createSlice({
   name: 'courses',
   initialState,
   reducers: {
-    setItems(state, action) {
-      state.items = action.payload;
-    },
-    addTodo(state, action) {
+    addCourse(state, action) {
       state.items.push(action.payload);
+    },
+    removeCourse(state, action) {
+      state.items = state.items.filter((todo) => todo.id !== action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -54,6 +51,6 @@ const CoursesSlice = createSlice({
   },
 });
 
-export const { setItems } = CoursesSlice.actions;
+export const { addCourse, removeCourse } = CoursesSlice.actions;
 
 export default CoursesSlice.reducer;

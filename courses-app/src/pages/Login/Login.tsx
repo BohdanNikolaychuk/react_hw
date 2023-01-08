@@ -9,12 +9,15 @@ import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 import { ILogin } from '../../@types/IAuth';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { userLogin } from '../../store/user/asyncActions';
+import { ROUTES } from '../../router/_Routes';
+import { selectAuthData } from '../../store/user/selectors';
 
-const Login = () => {
+export const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  const { isAuth } = useAppSelector((state) => state.auth);
+  const { isAuth, status } = useAppSelector(selectAuthData);
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
@@ -33,26 +36,13 @@ const Login = () => {
 
   const onSubmit = async (UserData: ILogin) => {
     try {
-      // logIn(UserData);
       dispatch(userLogin(UserData));
     } catch (e) {}
   };
   if (isAuth) {
-    navigate('/');
+    navigate(ROUTES.main);
   }
-
-  const ErrorView = () => {
-    // return (
-    //   !!error && (
-    //     <Alert status="error">
-    //       <AlertIcon />
-    //       <AlertDescription>{error}</AlertDescription>
-    //     </Alert>
-    //   )
-    // );
-  };
-
-  let errorView = ErrorView();
+  console.log(status);
 
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center">
@@ -111,5 +101,3 @@ const Login = () => {
     </Flex>
   );
 };
-
-export default Login;

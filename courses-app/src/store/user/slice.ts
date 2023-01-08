@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { string } from 'yup';
-import { getCurrentUser, registerUser, userLogin } from './asyncActions';
+import { getCurrentUser, LogOut, registerUser, userLogin } from './asyncActions';
 import { Status } from './types';
 
 const userToken = localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null;
@@ -73,6 +72,20 @@ const authSlice = createSlice({
     builder.addCase(getCurrentUser.rejected, (state) => {
       state.status = Status.ERROR;
       state.isAuth = false;
+    });
+
+    builder.addCase(LogOut.pending, (state) => {
+      state.status = Status.LOADING;
+    });
+
+    builder.addCase(LogOut.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      state.isAuth = false;
+      state.userToken = null;
+    });
+
+    builder.addCase(LogOut.rejected, (state) => {
+      state.status = Status.ERROR;
     });
   },
 });

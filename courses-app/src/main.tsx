@@ -1,9 +1,13 @@
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ChakraProvider } from '@chakra-ui/react';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ChakraProvider>
-    <App />
-  </ChakraProvider>,
+  <Provider store={store}>
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
+  </Provider>,
 );

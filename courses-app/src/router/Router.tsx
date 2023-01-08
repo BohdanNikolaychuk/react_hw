@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from './_Routes';
-import { Courses } from '../components/Courses/Courses';
 import { Layout } from '../components/Layout/Layout';
-import Login from '../pages/Login/Login';
-import Register from '../pages/Register/Register';
-import CourseInfo from './../pages/CourseInfo/CourseInfo';
+import { Login } from '../pages/Login/Login';
+import { Register } from '../pages/Register/Register';
+import { CourseInfo } from './../pages/CourseInfo/CourseInfo';
 import { CreateCourse } from '../pages/CreateCourse/CreateCourse';
+import { Home } from '../pages/Home/Home';
 export const router = createBrowserRouter([
   {
     path: ROUTES.courses,
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Courses />,
+        element: <Home />,
       },
       {
         element: <CourseInfo />,

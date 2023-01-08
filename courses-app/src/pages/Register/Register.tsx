@@ -7,9 +7,10 @@ import * as Yup from 'yup';
 import { IRegistration } from '../../@types/IAuth';
 
 import { registerUser } from '../../store/user/asyncActions';
-import { useAppDispatch, useAppSelector } from '../../store/store';
+import { useAppDispatch } from '../../store/store';
+import { ROUTES } from '../../router/_Routes';
 
-const Register: React.FC = () => {
+export const Register: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -32,7 +33,7 @@ const Register: React.FC = () => {
   const onSubmit = (data: IRegistration) => {
     try {
       dispatch(registerUser(data));
-      navigate('/login');
+      navigate(ROUTES.login);
     } catch (e) {
       console.log(e);
     }
@@ -77,5 +78,3 @@ const Register: React.FC = () => {
     </Flex>
   );
 };
-
-export default Register;

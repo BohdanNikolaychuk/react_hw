@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FormEvent } from 'react';
-import { Flex, Spacer, Container, Button, Input } from '@chakra-ui/react';
+import React, { FormEvent } from 'react';
+import { Flex, Container, Button, Input } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 interface SearchBar {

@@ -9,8 +9,9 @@ import { selectCoursesData } from '../../store/courses/selectors';
 
 import { useSelector } from 'react-redux';
 import { selectAuthorsData } from '../../store/authors/selectors';
+import { IAuthors } from '../../@types/IAuthors';
 
-const CourseInfo = () => {
+export const CourseInfo: React.FC = () => {
   const { courseId } = useParams();
   const { items } = useSelector(selectCoursesData);
   const { authorsList } = useSelector(selectAuthorsData);
@@ -19,9 +20,10 @@ const CourseInfo = () => {
     return course.id === courseId;
   });
 
-  const getAuthors = (authorIds: string[]) => {
-    return courses?.authors?.map((authorIds, index) => {
-      const author = authorsList.find((author) => author.id === authorIds);
+  const getAuthorsNames = (authorIds: string[], AuthorsList: IAuthors[]) => {
+    return authorIds.map((authorsID, index) => {
+      const author = AuthorsList.find((author) => author.id === authorsID);
+
       if (index === authorIds.length - 1) {
         return author?.name;
       }
@@ -29,7 +31,7 @@ const CourseInfo = () => {
     });
   };
 
-  const authorText = getAuthors(courses?.authors!);
+  const authorText = getAuthorsNames(courses?.authors!, authorsList);
 
   return (
     <>
@@ -66,5 +68,3 @@ const CourseInfo = () => {
     </>
   );
 };
-
-export default CourseInfo;
