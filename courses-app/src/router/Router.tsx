@@ -3,6 +3,8 @@ import { ROUTES } from './_Routes';
 import { Layout } from '../components/Layout/Layout';
 
 import { Home, CreateCourse, CourseInfo, Register, Login } from '../pages';
+import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
+
 export const router = createBrowserRouter([
   {
     path: ROUTES.courses,
@@ -26,7 +28,11 @@ export const router = createBrowserRouter([
         path: ROUTES.register,
       },
       {
-        element: <CreateCourse />,
+        element: (
+          <ProtectedRoute>
+            <CreateCourse />
+          </ProtectedRoute>
+        ),
         path: ROUTES.create,
       },
     ],

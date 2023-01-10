@@ -10,6 +10,7 @@ type State = {
   userEmail: string;
   userToken?: string | null;
   status: string;
+  role: string;
 };
 
 const initialState: State = {
@@ -17,11 +18,12 @@ const initialState: State = {
   userName: '',
   userEmail: '',
   userToken: userToken,
+  role: '',
   status: Status.LOADING,
 };
 
 type SuccsesUser = {
-  user: { name: string; email: string };
+  user: { name: string; email: string; role: string };
 };
 
 const authSlice = createSlice({
@@ -50,6 +52,7 @@ const authSlice = createSlice({
 
       state.userName = action.payload.user.name;
       state.userEmail = action.payload.user.email;
+      state.role = action.payload.user.role;
       state.isAuth = true;
     });
 
@@ -66,6 +69,7 @@ const authSlice = createSlice({
       state.status = Status.SUCCESS;
       state.userName = action.payload?.data.result.name;
       state.userEmail = action.payload?.data.result.email;
+      state.role = action.payload?.data.result.role;
       state.isAuth = true;
     });
 
@@ -81,6 +85,9 @@ const authSlice = createSlice({
     builder.addCase(LogOut.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
       state.isAuth = false;
+      state.userName = '';
+      state.userEmail = '';
+      state.role = '';
       state.userToken = null;
     });
 

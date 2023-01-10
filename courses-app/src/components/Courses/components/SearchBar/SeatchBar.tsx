@@ -1,6 +1,8 @@
 import React, { FormEvent } from 'react';
 import { Flex, Container, Button, Input } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from './../../../../store/store';
+import { selectAuthData } from '../../../../store/user/selectors';
 
 interface SearchBar {
   inputHandler: (filter: string) => void;
@@ -8,7 +10,7 @@ interface SearchBar {
 
 export const SearchBar = ({ inputHandler }: SearchBar) => {
   const [filter, setFilter] = React.useState('');
-
+  const { role } = useAppSelector(selectAuthData);
   const hendlerSetFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };
@@ -17,6 +19,18 @@ export const SearchBar = ({ inputHandler }: SearchBar) => {
     event.preventDefault();
     inputHandler(filter);
   };
+
+  const PerminitionForSearch = (role: string) => {
+    if (role === 'admin') {
+      return (
+        <Button as={Link} to="course/create">
+          Add new Course
+        </Button>
+      );
+    }
+  };
+
+  const perminitionForSearch = PerminitionForSearch(role);
 
   return (
     <Container maxW="2xl">
@@ -31,9 +45,7 @@ export const SearchBar = ({ inputHandler }: SearchBar) => {
             />
             <Button type="submit">Search</Button>
           </Flex>
-          <Button as={Link} to="course/create">
-            Add new Course
-          </Button>
+          {perminitionForSearch}
         </form>
       </Flex>
     </Container>

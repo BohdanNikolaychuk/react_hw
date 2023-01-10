@@ -6,16 +6,17 @@ import { Link } from 'react-router-dom';
 import toHoursAndMinutes from '../../../../helpers/toHoursAndMinutes';
 import { formatDate } from '../../../../helpers/formatDate';
 import { IList } from '../../../../@types/IList';
-import { useAppDispatch } from '../../../../store/store';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+
 import { selectAuthorsData } from '../../../../store/authors/selectors';
 import { FetchAllAuthors } from '../../../../store/authors/asyncActions';
 import { IAuthors } from '../../../../@types/IAuthors';
 import { removeCourse } from '../../../../store/courses/slice';
+import { selectAuthData } from '../../../../store/user/selectors';
 export const CourseCard = ({ id, title, description, creationDate, duration, authors }: IList) => {
   const dispatch = useAppDispatch();
-  const { authorsList } = useSelector(selectAuthorsData);
-
+  const { authorsList } = useAppSelector(selectAuthorsData);
+  const { role } = useAppSelector(selectAuthData);
   const getAllAuthors = () => {
     dispatch(FetchAllAuthors());
   };
@@ -41,8 +42,21 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
     }
   };
 
-  const authorText = getCourseAuthors(authorsList, authors!);
+  const PermitionForButtons = (role: string) => {
+    if (role === 'admin') {
+      return (
+        <>
+          <Button onClick={() => dispatch(removeCourse(id))}>Delete</Button>
+          <Button as={Link} to={`course/create?id=${id}`}>
+            Edit
+          </Button>
+        </>
+      );
+    }
+  };
 
+  const authorText = getCourseAuthors(authorsList, authors!);
+  const perminitionForButttons = PermitionForButtons(role);
   return (
     <Card m={'20px'}>
       <Flex>
@@ -71,8 +85,7 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
             <Button as={Link} to={`/course/${id}`}>
               Show course
             </Button>
-            <Button onClick={() => dispatch(removeCourse(id))}>Delete</Button>
-            <Button onClick={() => dispatch(removeCourse(id))}>Edit</Button>
+            {perminitionForButttons}
           </Box>
         </CardBody>
       </Flex>
