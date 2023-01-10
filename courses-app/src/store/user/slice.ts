@@ -16,7 +16,7 @@ const initialState: State = {
   isAuth: !!userToken,
   userName: '',
   userEmail: '',
-  userToken,
+  userToken: userToken,
   status: Status.LOADING,
 };
 
@@ -40,7 +40,7 @@ const authSlice = createSlice({
     builder.addCase(registerUser.rejected, (state) => {
       state.status = Status.ERROR;
     });
-
+    // LOGIN
     builder.addCase(userLogin.pending, (state) => {
       state.status = Status.LOADING;
     });
@@ -57,7 +57,7 @@ const authSlice = createSlice({
       state.status = Status.ERROR;
       state.isAuth = false;
     });
-
+    // CURRENT USER
     builder.addCase(getCurrentUser.pending, (state) => {
       state.status = Status.LOADING;
     });
@@ -65,7 +65,7 @@ const authSlice = createSlice({
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
       state.userName = action.payload?.data.result.name;
-
+      state.userEmail = action.payload?.data.result.email;
       state.isAuth = true;
     });
 
@@ -73,7 +73,7 @@ const authSlice = createSlice({
       state.status = Status.ERROR;
       state.isAuth = false;
     });
-
+    //LOGOUT
     builder.addCase(LogOut.pending, (state) => {
       state.status = Status.LOADING;
     });

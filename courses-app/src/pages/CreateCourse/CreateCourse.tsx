@@ -1,3 +1,5 @@
+import React from 'react';
+// ui
 import {
   FormControl,
   FormLabel,
@@ -10,18 +12,21 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useNavigate, NavLink } from 'react-router-dom';
-
-import React from 'react';
-
+// helpers
 import toHoursAndMinutes from '../../helpers/toHoursAndMinutes';
 import createId from '../../helpers/createId';
-import { IAuthors } from '../../@types/IAuthors';
 
+// types
+import { IAuthors } from '../../@types/IAuthors';
+// store
 import { selectAuthorsData } from '../../store/authors/selectors';
 import { useSelector } from 'react-redux';
 import { addCourse } from '../../store/courses/slice';
 import { useAppDispatch } from '../../store/store';
 import { addAuthor } from '../../store/authors/slice';
+
+// CONST
+
 import { ROUTES } from '../../router/_Routes';
 
 export const CreateCourse = () => {
@@ -74,7 +79,7 @@ export const CreateCourse = () => {
           creationDate: new Date().toLocaleDateString(),
         }),
       );
-      navigate(ROUTES.courses);
+      navigate(ROUTES.main);
     }
   };
 

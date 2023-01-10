@@ -1,11 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from './_Routes';
 import { Layout } from '../components/Layout/Layout';
-import { Login } from '../pages/Login/Login';
-import { Register } from '../pages/Register/Register';
-import { CourseInfo } from './../pages/CourseInfo/CourseInfo';
-import { CreateCourse } from '../pages/CreateCourse/CreateCourse';
-import { Home } from '../pages/Home/Home';
+
+import { Home, CreateCourse, CourseInfo, Register, Login } from '../pages';
 export const router = createBrowserRouter([
   {
     path: ROUTES.courses,

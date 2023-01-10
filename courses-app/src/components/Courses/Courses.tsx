@@ -1,11 +1,14 @@
 import React from 'react';
+// ui
+import { Container } from '@chakra-ui/react';
+
+//components
 import { SearchBar } from './components/SearchBar/SeatchBar';
 import { CourseCard } from './components/CourseCard/CourseCard';
-import { Container } from '@chakra-ui/react';
-import { Box, SkeletonText } from '@chakra-ui/react';
 
+// types
 import { IList } from '../../@types/IList';
-
+// store
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { useSelector } from 'react-redux';
 import { selectCoursesData } from '../../store/courses/selectors';
@@ -26,7 +29,9 @@ export const Courses: React.FC = () => {
     if (isAuth) {
       dispatch(getCurrentUser());
     }
-    if (!items.length) dispatch(FetchAllCourses());
+    if (!items.length) {
+      dispatch(FetchAllCourses());
+    }
   }, []);
 
   let inputHandler = (filter: string): void => {
@@ -48,14 +53,7 @@ export const Courses: React.FC = () => {
   return (
     <Container maxW="1220px">
       <SearchBar inputHandler={inputHandler}></SearchBar>
-      {isAuth ? (
-        Allcourses
-      ) : (
-        <Box padding="6" boxShadow="lg" bg="white">
-          <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-          <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-        </Box>
-      )}
+      {Allcourses}
     </Container>
   );
 };

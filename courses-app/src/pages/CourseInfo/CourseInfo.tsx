@@ -5,10 +5,11 @@ import { useParams, NavLink } from 'react-router-dom';
 import { formatDate } from '../../helpers/formatDate';
 import toHoursAndMinutes from './../../helpers/toHoursAndMinutes';
 
-import { selectCoursesData } from '../../store/courses/selectors';
-
 import { useSelector } from 'react-redux';
+import { selectCoursesData } from '../../store/courses/selectors';
 import { selectAuthorsData } from '../../store/authors/selectors';
+
+//
 import { IAuthors } from '../../@types/IAuthors';
 
 export const CourseInfo: React.FC = () => {
