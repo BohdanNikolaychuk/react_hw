@@ -15,10 +15,12 @@ import { selectCoursesData } from '../../store/courses/selectors';
 import { FetchAllCourses } from '../../store/courses/asyncActions';
 import { getCurrentUser } from '../../store/user/asyncActions';
 import { selectAuthData } from '../../store/user/selectors';
+import { Loading } from '../Loading/Loading';
+import { FetchAllAuthors } from '../../store/authors/asyncActions';
 
 export const Courses: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { items } = useSelector(selectCoursesData);
+  const { items, status } = useSelector(selectCoursesData);
 
   const { isAuth } = useAppSelector(selectAuthData);
   const [Search, setSearch] = React.useState<string>('');
@@ -29,18 +31,23 @@ export const Courses: React.FC = () => {
     if (isAuth) {
       dispatch(getCurrentUser());
     }
-    if (!items.length) {
-      dispatch(FetchAllCourses());
-    }
+    dispatch(FetchAllCourses());
+    dispatch(FetchAllAuthors());
   }, []);
+
+  const ShowLoading = (status: string) => {
+    if (status === 'loading') {
+      return <Loading></Loading>;
+    }
+  };
 
   let inputHandler = (filter: string): void => {
     setSearch(filter.toLowerCase());
   };
 
   const getCourses = (courses: IList[]) => {
-    if (courses.length === 0) {
-      return <div>There is no courses yet</div>;
+    if (courses?.length === 0) {
+      return <>There is no courses yet</>;
     }
     return courses.map((course) => {
       const courseTitle = course?.title?.toLowerCase();
@@ -49,10 +56,12 @@ export const Courses: React.FC = () => {
   };
 
   const Allcourses = getCourses(items);
+  const showLoading = ShowLoading(status);
 
   return (
     <Container maxW="1220px">
       <SearchBar inputHandler={inputHandler}></SearchBar>
+      {showLoading}
       {Allcourses}
     </Container>
   );

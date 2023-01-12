@@ -1,17 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IAuthors } from '../../@types/IAuthors';
 
 import { FetchAllAuthors } from './asyncActions';
-import { Status } from './types';
-
-type State = {
-  authorsList: IAuthors[];
-  status: string;
-};
+import { State, Status } from './types';
 
 const initialState: State = {
   authorsList: [],
   status: Status.LOADING,
+  error: '',
 };
 
 const AuthorsSlice = createSlice({
@@ -20,6 +15,9 @@ const AuthorsSlice = createSlice({
   reducers: {
     addAuthor(state, action) {
       state.authorsList.push(action.payload);
+    },
+    removeAuthor(state, action) {
+      state.authorsList = state.authorsList.filter((author) => author.id !== action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -35,11 +33,12 @@ const AuthorsSlice = createSlice({
 
     builder.addCase(FetchAllAuthors.rejected, (state, action) => {
       state.status = Status.ERROR;
+      state.error = action.payload as string;
       state.authorsList = [];
     });
   },
 });
 
-export const { addAuthor } = AuthorsSlice.actions;
+export const { addAuthor, removeAuthor } = AuthorsSlice.actions;
 
 export default AuthorsSlice.reducer;

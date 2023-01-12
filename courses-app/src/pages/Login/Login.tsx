@@ -1,22 +1,38 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Flex, Heading, Input, Button, Text } from '@chakra-ui/react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  Flex,
+  Heading,
+  Input,
+  Button,
+  Text,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  useDisclosure,
+  CloseButton,
+} from '@chakra-ui/react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 
-import { ILogin } from '../../@types/IAuth';
+//store
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { userLogin } from '../../store/user/asyncActions';
-import { ROUTES } from '../../router/_Routes';
 import { selectAuthData } from '../../store/user/selectors';
+//const
+import { ROUTES } from '../../router/_Routes';
+
+//types
+import { ILogin } from '../../@types/IAuth';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  const { isAuth, status } = useAppSelector(selectAuthData);
+  const { isAuth, error } = useAppSelector(selectAuthData);
+  const [Show, setShow] = React.useState(false);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
@@ -35,14 +51,26 @@ export const Login: React.FC = () => {
   });
 
   const onSubmit = async (UserData: ILogin) => {
-    try {
-      dispatch(userLogin(UserData));
-    } catch (e) {}
+    await dispatch(userLogin(UserData));
   };
   if (isAuth) {
     navigate(ROUTES.main);
   }
-  console.log(status);
+
+  const ErrorAlert = (error: string) => {
+    if (error !== '') {
+      return (
+        <>
+          <Alert status="error">
+            <AlertIcon />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </>
+      );
+    }
+  };
+
+  const errorView = ErrorAlert(error);
 
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center">
@@ -84,7 +112,7 @@ export const Login: React.FC = () => {
             </Alert>
           )}
 
-          {/* {errorView} */}
+          {errorView}
 
           <Button disabled={!isValid} type="submit" colorScheme="teal" mb={8}>
             Log In
@@ -92,7 +120,7 @@ export const Login: React.FC = () => {
 
           <Text mb={6}>
             If you not have an account you can
-            <Button as={Link} to="/register">
+            <Button as={NavLink} to="/register">
               Register
             </Button>
           </Text>

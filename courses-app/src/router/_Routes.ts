@@ -5,4 +5,6 @@ export const ROUTES = {
   login: '/login',
   register: '/register',
   create: 'course/create',
+  update: (courseId = null) =>
+    courseId ? `/course/update/:${courseId}` : `/course/update/:courseId`,
 };

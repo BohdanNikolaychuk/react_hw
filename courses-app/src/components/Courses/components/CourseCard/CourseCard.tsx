@@ -9,21 +9,15 @@ import { IList } from '../../../../@types/IList';
 import { useAppDispatch, useAppSelector } from '../../../../store/store';
 
 import { selectAuthorsData } from '../../../../store/authors/selectors';
-import { FetchAllAuthors } from '../../../../store/authors/asyncActions';
+
 import { IAuthors } from '../../../../@types/IAuthors';
-import { removeCourse } from '../../../../store/courses/slice';
+
 import { selectAuthData } from '../../../../store/user/selectors';
+import { FetchDeleteCourse } from '../../../../store/courses/asyncActions';
 export const CourseCard = ({ id, title, description, creationDate, duration, authors }: IList) => {
   const dispatch = useAppDispatch();
   const { authorsList } = useAppSelector(selectAuthorsData);
   const { role } = useAppSelector(selectAuthData);
-  const getAllAuthors = () => {
-    dispatch(FetchAllAuthors());
-  };
-
-  React.useEffect(() => {
-    if (!authorsList.length) getAllAuthors();
-  }, []);
 
   const getCourseAuthors = (authors: IAuthors[], courseAuthors: string[]) => {
     if (courseAuthors) {
@@ -46,8 +40,8 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
     if (role === 'admin') {
       return (
         <>
-          <Button onClick={() => dispatch(removeCourse(id))}>Delete</Button>
-          <Button as={Link} to={`course/create?id=${id}`}>
+          <Button onClick={() => dispatch(FetchDeleteCourse(id!))}>Delete</Button>
+          <Button as={Link} to={`course/update/${id}`}>
             Edit
           </Button>
         </>
@@ -56,7 +50,7 @@ export const CourseCard = ({ id, title, description, creationDate, duration, aut
   };
 
   const authorText = getCourseAuthors(authorsList, authors!);
-  const perminitionForButttons = PermitionForButtons(role);
+  const perminitionForButttons = PermitionForButtons(role!);
   return (
     <Card m={'20px'}>
       <Flex>

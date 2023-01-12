@@ -1,26 +1,21 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
+
 import { IList } from '../../@types/IList';
 
-import { FetchAllCourses } from './asyncActions';
+import { FetchAddCourse, FetchAllCourses } from './asyncActions';
 import { Status } from './types';
 
 type State = {
   items: IList[];
   status: string;
+  error: string;
 };
 
 const initialState: State = {
   items: [],
-  status: Status.LOADING,
+  status: Status.MAIN,
+  error: '',
 };
-
-export const FetchAddCourse = createAsyncThunk(
-  'courses/fetchAddCourse',
-  async function (params: any, { rejectWithValue, dispatch }) {
-    const res = await axios.post('http://localhost:4000​/courses​/add', params);
-  },
-);
 
 const CoursesSlice = createSlice({
   name: 'courses',
@@ -45,6 +40,19 @@ const CoursesSlice = createSlice({
     });
 
     builder.addCase(FetchAllCourses.rejected, (state) => {
+      state.status = Status.ERROR;
+      state.items = [];
+    });
+    builder.addCase(FetchAddCourse.pending, (state) => {
+      state.status = Status.LOADING;
+      state.items = [];
+    });
+
+    builder.addCase(FetchAddCourse.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+    });
+
+    builder.addCase(FetchAddCourse.rejected, (state) => {
       state.status = Status.ERROR;
       state.items = [];
     });

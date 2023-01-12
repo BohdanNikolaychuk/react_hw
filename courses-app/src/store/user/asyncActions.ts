@@ -13,13 +13,13 @@ export const registerUser = createAsyncThunk(
         },
       };
       await axios.post(`register`, { name, email, password }, config);
-    } catch (error) {
-      // if (error.response && error.response.data.message) {
-      //   return rejectWithValue(error.response.data.message);
-      // } else {
-      //   return rejectWithValue(error.message);
-      // }
-      console.log(error);
+    } catch (err: any) {
+      let error = err;
+      if (!error.response) {
+        throw err;
+      }
+
+      throw rejectWithValue(error.response.data.result);
     }
   },
 );
@@ -37,13 +37,14 @@ export const userLogin = createAsyncThunk(
 
       localStorage.setItem('userToken', data.result);
       return data;
-    } catch (error) {
-      // return custom error message from API if any
-      // if (error.response && error.response.result) {
-      //   return rejectWithValue(error.response.data.message);
-      // } else {
-      //   return rejectWithValue(error.message);
-      // }
+    } catch (err: any) {
+      let error = err;
+      if (error.response.data.errors) {
+        throw rejectWithValue(error.response.data.errors[0]);
+      }
+      if (error.response.data.result) {
+        throw rejectWithValue(error.response.data.result);
+      }
     }
   },
 );
@@ -51,34 +52,24 @@ export const userLogin = createAsyncThunk(
 export const getCurrentUser = createAsyncThunk('auth/me', async () => {
   try {
     const data = await axios.get(`users/me`);
-
     return data;
-  } catch (error) {
-    // // return custom error message from API if any
-    // if (error.response && error.response.data.message) {
-    //   return rejectWithValue(error.response.data.message);
-    // } else {
-    //   return rejectWithValue(error.message);
-    // }
+  } catch (err: any) {
+    let error = err;
+    if (error.response.data) {
+      localStorage.clear();
+    }
   }
 });
 
 export const LogOut = createAsyncThunk('auth/LogOut', async () => {
   try {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    const data = await axios.delete(`/logout`, config);
+    const data = await axios.delete(`/logout`);
     localStorage.clear();
     return data;
-  } catch (error) {
-    // // return custom error message from API if any
-    // if (error.response && error.response.data.message) {
-    //   return rejectWithValue(error.response.data.message);
-    // } else {
-    //   return rejectWithValue(error.message);
-    // }
+  } catch (err: any) {
+    let error = err;
+    if (error.response.data) {
+      localStorage.clear();
+    }
   }
 });

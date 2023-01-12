@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from './_Routes';
 import { Layout } from '../components/Layout/Layout';
 
-import { Home, CreateCourse, CourseInfo, Register, Login } from '../pages';
+import { Home, CourseFrom, CourseInfo, Register, Login } from '../pages';
 import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -30,10 +30,18 @@ export const router = createBrowserRouter([
       {
         element: (
           <ProtectedRoute>
-            <CreateCourse />
+            <CourseFrom value={'create'} />
           </ProtectedRoute>
         ),
         path: ROUTES.create,
+      },
+      {
+        element: (
+          <ProtectedRoute>
+            <CourseFrom value={'update'} />
+          </ProtectedRoute>
+        ),
+        path: ROUTES.update(),
       },
     ],
   },
