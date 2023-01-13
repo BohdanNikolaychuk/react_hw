@@ -19,7 +19,6 @@ export const FetchAllAuthors = createAsyncThunk(
 );
 
 type authorsList = {
-  id: string;
   name: string;
 };
 
@@ -28,8 +27,9 @@ export const FetchAddAuthors = createAsyncThunk(
   async (params: authorsList, { rejectWithValue, dispatch }) => {
     try {
       const res = await axios.post('http://localhost:4000/authors/add', params);
-      dispatch(addAuthor(params));
-      return res;
+
+      dispatch(addAuthor(res.data.result));
+
     } catch (err: any) {
       let error = err;
       if (error.response.data) {

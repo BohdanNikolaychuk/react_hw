@@ -22,27 +22,33 @@ import { IAuthors } from '../../@types/IAuthors';
 import { selectAuthorsData } from '../../store/authors/selectors';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import { selectCoursesData } from '../../store/courses/selectors';
-import { FetchAddCourse } from '../../store/courses/asyncActions';
-import { FetchAddAuthors, FetchRemoveAuthors } from '../../store/authors/asyncActions';
+
+import { FetchAddCourse, FetchCourseByID } from '../../store/courses/asyncActions';
+import { FetchAddAuthors } from '../../store/authors/asyncActions';
 // CONST
 
 import { ROUTES } from '../../router/_Routes';
 import { Authors } from '../../components/Authors/Authors';
 
-export const CourseFrom = ({ value }: any) => {
-  // const { items } = useAppSelector(selectCoursesData);
-  const { courseId } = useParams();
-  // const courses = items.find((course) => {
-  //   return course.id === courseId;
-  // });
+type Props = {
+  value: 'create' | 'update';
+};
 
+export const CourseFrom = ({ value }: Props) => {
+  const { courseId } = useParams();
   const navigate = useNavigate();
+
   const { authorsList } = useSelector(selectAuthorsData);
   const dispatch = useAppDispatch();
 
-  const [title, setTitle] = React.useState<string>('');
-  const [description, setDescription] = React.useState<string>('');
+  let a = dispatch(FetchCourseByID(courseId!));
+  console.log(a);
+
+  // State
+  const [title, setTitle] = React.useState(() => (value === 'update' && courseId ? courseId : ''));
+  const [description, setDescription] = React.useState(() =>
+    value === 'update' && courseId ? courseId : '',
+  );
   const [selectedAuthors, setSelectedAuthors] = React.useState<IAuthors[]>([]);
   const [duration, setDuration] = React.useState<number>(0);
   const [newAuthorName, setNewAuthorName] = React.useState<string>('');
@@ -68,43 +74,46 @@ export const CourseFrom = ({ value }: any) => {
     setDuration(+inputValue);
   };
 
+  const generateCourse = (courseDate: string) => {
+    const courseAuthors =
+      selectedAuthors.length > 0 ? selectedAuthors.map((author) => author.id) : [];
+
+    return {
+      title,
+      duration,
+      description,
+      creationDate: courseDate,
+      authors: courseAuthors,
+    };
+  };
+
   const createNewCourse = async () => {
-    if (!title || !description || !authorsList || !selectedAuthors || !duration) {
+    if (!title || !description || !selectedAuthors || !duration) {
       alert('Add all fileds');
-    } else {
-      const courseAuthors =
-        selectedAuthors.length > 0 ? selectedAuthors.map((author) => author.id) : [];
-
-      const newCourse = {
-        id: createId(),
-        title: title,
-        description: description,
-        duration: duration,
-        authors: courseAuthors,
-        creationDate: new Date().toLocaleDateString(),
-      };
-
-      dispatch(FetchAddCourse(newCourse));
-      navigate(ROUTES.main);
     }
+    const courseDate = new Date().toLocaleDateString();
+
+    const newCourse = generateCourse(courseDate);
+
+    dispatch(FetchAddCourse(newCourse));
+    navigate(ROUTES.main);
   };
 
   const RemoveAuthors = (id: string) => {
     setSelectedAuthors((prev) => prev.filter((author) => author.id !== id));
   };
 
-  const createAuthor = (): void => {
-    if (!newAuthorName) {
+  const createAuthor = () => {
+    if (newAuthorName === '') {
       alert('Pass author name');
-    } else {
-      const newAuthors = {
-        id: createId(),
-        name: newAuthorName,
-      };
-      dispatch(FetchAddAuthors(newAuthors));
-
-      setNewAuthorName('');
     }
+
+    const newAuthor = {
+      name: newAuthorName,
+    };
+
+    dispatch(FetchAddAuthors(newAuthor));
+    setNewAuthorName('');
   };
 
   const AddAuthors = (id: string) => {
@@ -121,7 +130,7 @@ export const CourseFrom = ({ value }: any) => {
     return authors.map((author) => {
       const isSelected = selectedAuthors.find((selected) => author.id === selected.id);
       if (isSelected != null) {
-        return <></>;
+        return;
       }
       return (
         <Authors key={author.id} authors={author} onClick={AddAuthors} buttonText={'Add'}></Authors>
@@ -136,13 +145,6 @@ export const CourseFrom = ({ value }: any) => {
 
     return selectedAuthors.map((selectedAuthor) => {
       return (
-        // <Box w="100%" >
-        //   <Flex justify="space-around">
-        //     <Text align="center">{selectedAuthor.name}</Text>
-        //     <Button onClick={() => RemoveAuthors(selectedAuthor.id)}>Remove</Button>
-        //   </Flex>
-        // </Box>
-
         <Authors
           key={selectedAuthor.id}
           authors={selectedAuthor}
@@ -152,8 +154,16 @@ export const CourseFrom = ({ value }: any) => {
     });
   };
 
+  const ChooseButton =
+    value === 'create' ? (
+      <Button onClick={createNewCourse}>Add Course</Button>
+    ) : (
+      <Button >Update</Button>
+    );
+
   const authorsInfo = getAddAuthors(authorsList);
   const selectedListOfAuthors = hendelSelectedAuthors(selectedAuthors);
+  console.log(selectedAuthors);
 
   return (
     <Container maxW="1220px">
@@ -164,7 +174,7 @@ export const CourseFrom = ({ value }: any) => {
           <Button as={NavLink} to="/">
             To Main
           </Button>
-          <Button onClick={createNewCourse}>Add Course</Button>
+          {ChooseButton}
         </Flex>
       </FormControl>
 

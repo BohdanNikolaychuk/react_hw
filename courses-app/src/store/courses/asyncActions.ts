@@ -8,7 +8,7 @@ export const FetchAllCourses = createAsyncThunk('courses/fetchAllCourses', async
     const { data } = await axios.get(`http://localhost:4000/courses/all`);
 
     return data.result;
-  } catch (error) {}
+  } catch (err) {}
 });
 
 export const FetchAddCourse = createAsyncThunk(
@@ -18,7 +18,13 @@ export const FetchAddCourse = createAsyncThunk(
       const res = await axios.post('http://localhost:4000/courses/add', params);
       dispatch(addCourse(params));
       return res;
-    } catch (error) {}
+    } catch (err: any) {
+      let error = err;
+
+      if (error.response) {
+        throw rejectWithValue(error.response.data);
+      }
+    }
   },
 );
 
@@ -28,6 +34,28 @@ export const FetchDeleteCourse = createAsyncThunk(
     try {
       const res = await axios.delete(`http://localhost:4000/courses/${courseId}`);
       dispatch(removeCourse(courseId));
-    } catch (error) {}
+    } catch (err: any) {
+      let error = err;
+
+      if (error.response) {
+        throw rejectWithValue(error.response.data);
+      }
+    }
+  },
+);
+
+export const FetchCourseByID = createAsyncThunk('courses/fetchCourseByID',
+   async (courseId: string, { rejectWithValue, dispatch }) => {
+    try {
+      const res = await axios.get(`http://localhost:4000/courses/${courseId}`);
+      console.log(res);
+      
+    } catch (err: any) {
+      let error = err;
+
+      if (error.response) {
+        throw rejectWithValue(error.response.data);
+      }
+    }
   },
 );

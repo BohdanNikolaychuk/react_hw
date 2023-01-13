@@ -14,6 +14,8 @@ const AuthorsSlice = createSlice({
   initialState,
   reducers: {
     addAuthor(state, action) {
+      console.log(action.payload);
+
       state.authorsList.push(action.payload);
     },
     removeAuthor(state, action) {

@@ -12,11 +12,9 @@ import { IList } from '../../@types/IList';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { useSelector } from 'react-redux';
 import { selectCoursesData } from '../../store/courses/selectors';
-import { FetchAllCourses } from '../../store/courses/asyncActions';
-import { getCurrentUser } from '../../store/user/asyncActions';
+
 import { selectAuthData } from '../../store/user/selectors';
 import { Loading } from '../Loading/Loading';
-import { FetchAllAuthors } from '../../store/authors/asyncActions';
 
 export const Courses: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -26,14 +24,6 @@ export const Courses: React.FC = () => {
   const [Search, setSearch] = React.useState<string>('');
 
   //FUNC
-
-  React.useEffect(() => {
-    if (isAuth) {
-      dispatch(getCurrentUser());
-    }
-    dispatch(FetchAllCourses());
-    dispatch(FetchAllAuthors());
-  }, []);
 
   const ShowLoading = (status: string) => {
     if (status === 'loading') {
