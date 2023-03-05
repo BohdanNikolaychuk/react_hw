@@ -1,3 +1,3 @@
-export function formatDate(date:string) {
-  return date.replace(/\//g, '.');
+export function formatDate(date: string) {
+	return date.replace(/\//g, '.')
 }

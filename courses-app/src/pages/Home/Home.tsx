@@ -1,18 +1,21 @@
-import React from 'react';
-import { FetchAllAuthors } from '../../store/authors/asyncActions';
-import { FetchAllCourses } from '../../store/courses/asyncActions';
-import { useAppDispatch  } from '../../store/store';
-import { getCurrentUser } from '../../store/user/asyncActions';
-import { Courses } from './../../components/Courses/Courses';
+import React from 'react'
+import { useAppDispatch } from '../../hooks/redux.hooks'
+import { FetchAllAuthors } from '../../store/authors/asyncActions'
+import { FetchAllCourses } from '../../store/courses/asyncActions'
+
+import { getCurrentUser } from '../../store/user/asyncActions'
+import { Courses } from './../../components/Courses/Courses'
 
 export const Home = () => {
+	const dispatch = useAppDispatch()
+	React.useEffect(() => {
+		if (localStorage.getItem('userToken')) {
+			dispatch(getCurrentUser())
+		}
 
-const dispatch = useAppDispatch();
-React.useEffect(() => {
-  dispatch(getCurrentUser());
-  dispatch(FetchAllCourses());
-  dispatch(FetchAllAuthors());
-}, []);
+		dispatch(FetchAllCourses())
+		dispatch(FetchAllAuthors())
+	}, [])
 
-  return <Courses></Courses>;
-};
+	return <Courses></Courses>
+}

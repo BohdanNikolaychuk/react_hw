@@ -44,12 +44,29 @@ export const FetchDeleteCourse = createAsyncThunk(
   },
 );
 
-export const FetchCourseByID = createAsyncThunk('courses/fetchCourseByID',
-   async (courseId: string, { rejectWithValue, dispatch }) => {
+export const FetchCourseByID = createAsyncThunk(
+  'courses/fetchCourseByID',
+  async (courseId: string, { rejectWithValue }) => {
     try {
       const res = await axios.get(`http://localhost:4000/courses/${courseId}`);
+    } catch (err: any) {
+      let error = err;
+
+      if (error.response) {
+        throw rejectWithValue(error.response.data);
+      }
+    }
+  },
+);
+
+export const FetchCourseUpdate = createAsyncThunk(
+  'courses/fetchCourseUpdate',
+  async (data: any, { rejectWithValue }) => {
+    const { courseId, updateCourse } = data;
+
+    try {
+      const res = await axios.put(`http://localhost:4000/courses/${courseId}`, updateCourse);
       console.log(res);
-      
     } catch (err: any) {
       let error = err;
 

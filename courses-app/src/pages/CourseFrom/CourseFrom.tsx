@@ -1,226 +1,265 @@
-import React from 'react';
+import React from 'react'
 // ui
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  Text,
-  Textarea,
-  Flex,
-  Container,
-  Box,
-  Button,
-} from '@chakra-ui/react';
-import { useNavigate, NavLink, useParams } from 'react-router-dom';
+	Box,
+	Button,
+	Container,
+	Flex,
+	FormControl,
+	FormLabel,
+	Input,
+	Text,
+	Textarea,
+} from '@chakra-ui/react'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 // helpers
-import toHoursAndMinutes from '../../helpers/toHoursAndMinutes';
-import createId from '../../helpers/createId';
 
 // types
-import { IAuthors } from '../../@types/IAuthors';
+import { IAuthors } from '../../@types/IAuthors'
 // store
-import { selectAuthorsData } from '../../store/authors/selectors';
-import { useSelector } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '../../store/store';
 
-import { FetchAddCourse, FetchCourseByID } from '../../store/courses/asyncActions';
-import { FetchAddAuthors } from '../../store/authors/asyncActions';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks'
+import { FetchAddAuthors } from '../../store/authors/asyncActions'
+import {
+	FetchAddCourse,
+	FetchCourseUpdate,
+} from '../../store/courses/asyncActions'
 // CONST
 
-import { ROUTES } from '../../router/_Routes';
-import { Authors } from '../../components/Authors/Authors';
+import { Authors } from '../../components/Authors/Authors'
 
-type Props = {
-  value: 'create' | 'update';
-};
+import { toHoursAndMinutes } from '../../helpers'
+import { ROUTES } from '../../router/_Routes'
+import { selectIdEntity } from '../../store/courses/selectors'
 
-export const CourseFrom = ({ value }: Props) => {
-  const { courseId } = useParams();
-  const navigate = useNavigate();
+type ChooseForm = {
+	value: 'create' | 'update'
+}
 
-  const { authorsList } = useSelector(selectAuthorsData);
-  const dispatch = useAppDispatch();
+export const CourseFrom = ({ value }: ChooseForm) => {
+	const { courseId } = useParams()
+	const navigate = useNavigate()
 
-  let a = dispatch(FetchCourseByID(courseId!));
-  console.log(a);
+	const authorsList = useAppSelector(state => state.authors.authorsList)
+	const dispatch = useAppDispatch()
 
-  // State
-  const [title, setTitle] = React.useState(() => (value === 'update' && courseId ? courseId : ''));
-  const [description, setDescription] = React.useState(() =>
-    value === 'update' && courseId ? courseId : '',
-  );
-  const [selectedAuthors, setSelectedAuthors] = React.useState<IAuthors[]>([]);
-  const [duration, setDuration] = React.useState<number>(0);
-  const [newAuthorName, setNewAuthorName] = React.useState<string>('');
+	const articleById = useAppSelector(selectIdEntity(courseId!))
 
-  //function
+	// State
+	const [title, setTitle] = React.useState(() =>
+		value === 'update' && courseId ? articleById?.title : ''
+	)
+	const [description, setDescription] = React.useState(() =>
+		value === 'update' && courseId ? articleById?.description : ''
+	)
+	const [selectedAuthors, setSelectedAuthors] = React.useState<IAuthors[]>(
+		() => {
+			if (value === 'update') {
+				const courseAuthors = articleById?.authors?.map(id =>
+					authorsList.find(author => author.id === id)
+				)
 
-  let handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    let inputValue = e.target.value;
-    setTitle(inputValue);
-  };
-  let handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    let inputValue = e.target.value;
-    setDescription(inputValue);
-  };
+				return courseAuthors?.filter(Boolean) as IAuthors[]
+			}
+			return []
+		}
+	)
+	const [duration, setDuration] = React.useState(() =>
+		value === 'update' && courseId ? articleById?.duration : 0
+	)
+	const [newAuthorName, setNewAuthorName] = React.useState<string>('')
 
-  let handleAuthorsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    let inputValue = e.target.value;
-    setNewAuthorName(inputValue);
-  };
+	//function
 
-  let handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    let inputValue = e.target.value;
-    setDuration(+inputValue);
-  };
+	let handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		let inputValue = e.target.value
+		setTitle(inputValue)
+	}
+	let handleDescriptionChange = (
+		e: React.ChangeEvent<HTMLTextAreaElement>
+	): void => {
+		let inputValue = e.target.value
+		setDescription(inputValue)
+	}
 
-  const generateCourse = (courseDate: string) => {
-    const courseAuthors =
-      selectedAuthors.length > 0 ? selectedAuthors.map((author) => author.id) : [];
+	let handleAuthorsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		let inputValue = e.target.value
+		setNewAuthorName(inputValue)
+	}
 
-    return {
-      title,
-      duration,
-      description,
-      creationDate: courseDate,
-      authors: courseAuthors,
-    };
-  };
+	let handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		let inputValue = e.target.value
+		setDuration(+inputValue)
+	}
 
-  const createNewCourse = async () => {
-    if (!title || !description || !selectedAuthors || !duration) {
-      alert('Add all fileds');
-    }
-    const courseDate = new Date().toLocaleDateString();
+	const generateCourse = (courseDate: string) => {
+		const courseAuthors =
+			selectedAuthors.length > 0 ? selectedAuthors.map(author => author.id) : []
 
-    const newCourse = generateCourse(courseDate);
+		return {
+			title,
+			duration,
+			description,
+			creationDate: courseDate,
+			authors: courseAuthors,
+		}
+	}
 
-    dispatch(FetchAddCourse(newCourse));
-    navigate(ROUTES.main);
-  };
+	const createNewCourse = async () => {
+		if (!title || !description || !selectedAuthors || !duration) {
+			alert('Add all fields')
+		}
+		const courseDate = new Date().toLocaleDateString()
 
-  const RemoveAuthors = (id: string) => {
-    setSelectedAuthors((prev) => prev.filter((author) => author.id !== id));
-  };
+		const newCourse = generateCourse(courseDate)
 
-  const createAuthor = () => {
-    if (newAuthorName === '') {
-      alert('Pass author name');
-    }
+		dispatch(FetchAddCourse(newCourse))
+		navigate(ROUTES.main)
+	}
 
-    const newAuthor = {
-      name: newAuthorName,
-    };
+	const updateNewCourse = async () => {
+		const courseDate = new Date().toLocaleDateString()
+		const updateCourse = generateCourse(courseDate)
 
-    dispatch(FetchAddAuthors(newAuthor));
-    setNewAuthorName('');
-  };
+		dispatch(FetchCourseUpdate({ courseId, updateCourse }))
+		navigate(ROUTES.main)
+	}
 
-  const AddAuthors = (id: string) => {
-    const selected = authorsList.find((author) => author.id === id);
-    const isSelectedChosen = selectedAuthors.find((author) => author.id === id);
+	const RemoveAuthors = (id: string) => {
+		setSelectedAuthors(prev => prev.filter(author => author.id !== id))
+	}
 
-    if (selected == null) return;
-    if (isSelectedChosen != null) return;
+	const createAuthor = () => {
+		if (newAuthorName === '') {
+			alert('Pass author name')
+		}
 
-    setSelectedAuthors((prev) => [...prev, selected]);
-  };
+		const newAuthor = {
+			name: newAuthorName,
+		}
 
-  const getAddAuthors = (authors: IAuthors[]) => {
-    return authors.map((author) => {
-      const isSelected = selectedAuthors.find((selected) => author.id === selected.id);
-      if (isSelected != null) {
-        return;
-      }
-      return (
-        <Authors key={author.id} authors={author} onClick={AddAuthors} buttonText={'Add'}></Authors>
-      );
-    });
-  };
+		dispatch(FetchAddAuthors(newAuthor))
+		setNewAuthorName('')
+	}
 
-  const hendelSelectedAuthors = (selectedAuthors: IAuthors[]) => {
-    if (selectedAuthors.length === 0) {
-      return <Text align="center">Authors list is empty</Text>;
-    }
+	const AddAuthors = (id: string) => {
+		const selected = authorsList.find(author => author.id === id)
+		const isSelectedChosen = selectedAuthors.find(author => author.id === id)
 
-    return selectedAuthors.map((selectedAuthor) => {
-      return (
-        <Authors
-          key={selectedAuthor.id}
-          authors={selectedAuthor}
-          onClick={RemoveAuthors}
-          buttonText={'Remove'}></Authors>
-      );
-    });
-  };
+		if (selected == null) return
+		if (isSelectedChosen != null) return
 
-  const ChooseButton =
-    value === 'create' ? (
-      <Button onClick={createNewCourse}>Add Course</Button>
-    ) : (
-      <Button >Update</Button>
-    );
+		setSelectedAuthors(prev => [...prev, selected])
+	}
 
-  const authorsInfo = getAddAuthors(authorsList);
-  const selectedListOfAuthors = hendelSelectedAuthors(selectedAuthors);
-  console.log(selectedAuthors);
+	const getAddAuthors = (authors: IAuthors[]) => {
+		return authors.map(author => {
+			const isSelected = selectedAuthors.find(
+				selected => author.id === selected.id
+			)
+			if (isSelected != null) {
+				return
+			}
+			return (
+				<Authors
+					key={author.id}
+					authors={author}
+					onClick={AddAuthors}
+					buttonText={'Add'}
+				></Authors>
+			)
+		})
+	}
 
-  return (
-    <Container maxW="1220px">
-      <FormControl>
-        <FormLabel>Title</FormLabel>
-        <Flex minWidth="max-content" justify={'space-between'}>
-          <Input onChange={handleTitleChange} value={title} maxW="30%" placeholder="Title" />
-          <Button as={NavLink} to="/">
-            To Main
-          </Button>
-          {ChooseButton}
-        </Flex>
-      </FormControl>
+	const hendelSelectedAuthors = (selectedAuthors: IAuthors[]) => {
+		if (selectedAuthors.length === 0) {
+			return <Text align='center'>Authors list is empty</Text>
+		}
 
-      <FormControl>
-        <FormLabel>Description</FormLabel>
-        <Textarea
-          value={description}
-          onChange={handleDescriptionChange}
-          placeholder="Description"
-          size="sm"
-        />
-      </FormControl>
-      <Flex mt="5" justify="space-between">
-        <Box w="100%">
-          <Text align="center">Add author</Text>
-          <FormControl>
-            <FormLabel> Author name</FormLabel>
-            <Input
-              onChange={handleAuthorsChange}
-              value={newAuthorName}
-              placeholder="Author name "
-            />
-          </FormControl>
-          <Button onClick={createAuthor}>Create Author</Button>
+		return selectedAuthors.map(selectedAuthor => {
+			return (
+				<Authors
+					key={selectedAuthor.id}
+					authors={selectedAuthor}
+					onClick={RemoveAuthors}
+					buttonText={'Remove'}
+				></Authors>
+			)
+		})
+	}
 
-          <FormControl>
-            <FormLabel>Duration</FormLabel>
+	const ChooseButton =
+		value === 'create' ? (
+			<Button onClick={createNewCourse}>Add Course</Button>
+		) : (
+			<Button onClick={updateNewCourse}>Update</Button>
+		)
 
-            <Input onChange={handleDurationChange} placeholder="Duration" />
+	return (
+		<Container maxW='1220px'>
+			<FormControl>
+				<FormLabel>Title</FormLabel>
+				<Flex minWidth='max-content' justify={'space-between'}>
+					<Input
+						onChange={handleTitleChange}
+						value={title}
+						maxW='30%'
+						placeholder='Title'
+					/>
+					<Button as={NavLink} to='/'>
+						To Main
+					</Button>
+					{ChooseButton}
+				</Flex>
+			</FormControl>
 
-            <Text>
-              Duration:<strong>{toHoursAndMinutes(duration!)}</strong>
-            </Text>
-          </FormControl>
-        </Box>
-        <Box w="100%">
-          <Text align="center">Authors</Text>
+			<FormControl>
+				<FormLabel>Description</FormLabel>
+				<Textarea
+					value={description}
+					onChange={handleDescriptionChange}
+					placeholder='Description'
+					size='sm'
+				/>
+			</FormControl>
+			<Flex mt='5' justify='space-between'>
+				<Box w='100%'>
+					<Text align='center'>Add author</Text>
+					<FormControl>
+						<FormLabel> Author name</FormLabel>
+						<Input
+							onChange={handleAuthorsChange}
+							value={newAuthorName}
+							placeholder='Author name '
+						/>
+					</FormControl>
+					<Button onClick={createAuthor}>Create Author</Button>
 
-          {authorsInfo}
+					<FormControl>
+						<FormLabel>Duration</FormLabel>
 
-          <Text pt="5" align="center">
-            Course Authors
-          </Text>
-          {selectedListOfAuthors}
-        </Box>
-      </Flex>
-    </Container>
-  );
-};
+						<Input
+							value={duration}
+							onChange={handleDurationChange}
+							placeholder='Duration'
+						/>
+
+						<Text>
+							Duration:<strong>{toHoursAndMinutes(duration!)}</strong>
+						</Text>
+					</FormControl>
+				</Box>
+				<Box w='100%'>
+					<Text align='center'>Authors</Text>
+
+					{getAddAuthors(authorsList)}
+
+					<Text pt='5' align='center'>
+						Course Authors
+					</Text>
+					{hendelSelectedAuthors(selectedAuthors)}
+				</Box>
+			</Flex>
+		</Container>
+	)
+}

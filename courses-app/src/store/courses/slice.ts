@@ -6,13 +6,13 @@ import { FetchAddCourse, FetchAllCourses } from './asyncActions';
 import { Status } from './types';
 
 type State = {
-  items: IList[];
+  courses: IList[];
   status: string;
   error: string;
 };
 
 const initialState: State = {
-  items: [],
+  courses: [],
   status: Status.MAIN,
   error: '',
 };
@@ -22,30 +22,30 @@ const CoursesSlice = createSlice({
   initialState,
   reducers: {
     addCourse(state, action) {
-      state.items.push(action.payload);
+      state.courses.push(action.payload);
     },
     removeCourse(state, action) {
-      state.items = state.items.filter((todo) => todo.id !== action.payload);
+      state.courses = state.courses.filter((todo) => todo.id !== action.payload);
     },
   },
   extraReducers: (builder) => {
     builder.addCase(FetchAllCourses.pending, (state) => {
       state.status = Status.LOADING;
-      state.items = [];
+      state.courses = [];
     });
 
     builder.addCase(FetchAllCourses.fulfilled, (state, action) => {
-      state.items = action.payload;
+      state.courses = action.payload;
       state.status = Status.SUCCESS;
     });
 
     builder.addCase(FetchAllCourses.rejected, (state) => {
       state.status = Status.ERROR;
-      state.items = [];
+      state.courses = [];
     });
     builder.addCase(FetchAddCourse.pending, (state) => {
       state.status = Status.LOADING;
-      state.items = [];
+      state.courses = [];
     });
 
     builder.addCase(FetchAddCourse.fulfilled, (state, action) => {
@@ -54,7 +54,7 @@ const CoursesSlice = createSlice({
 
     builder.addCase(FetchAddCourse.rejected, (state) => {
       state.status = Status.ERROR;
-      state.items = [];
+      state.courses = [];
     });
   },
 });
