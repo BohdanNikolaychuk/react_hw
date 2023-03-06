@@ -3,11 +3,11 @@ import React, { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../../../hooks/redux.hooks'
 
-interface SearchBar {
+type SearchBarProps = {
 	inputHandler: (filter: string) => void
 }
 
-export const SearchBar = ({ inputHandler }: SearchBar) => {
+export const SearchBar = ({ inputHandler }: SearchBarProps) => {
 	const [filter, setFilter] = React.useState('')
 	const role = useAppSelector(state => state.auth.role)
 	const handlerSetFilter = (e: React.ChangeEvent<HTMLInputElement>) => {

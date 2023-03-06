@@ -19,7 +19,7 @@ import * as Yup from 'yup'
 
 import { userLogin } from '../../store/user/asyncActions'
 //const
-import { ROUTES } from '../../router/_Routes'
+import { ROUTES } from '../../router/ROUTES'
 
 //types
 import { ILogin } from '../../@types/IAuth'
@@ -101,7 +101,7 @@ export const Login: React.FC = () => {
 
 					<Text mb={6}>
 						If you not have an account you can
-						<Button as={NavLink} to='/register'>
+						<Button as={NavLink} to={ROUTES.register}>
 							Register
 						</Button>
 					</Text>

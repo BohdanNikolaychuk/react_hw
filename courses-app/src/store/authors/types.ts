@@ -1,13 +1,6 @@
-import { IAuthors } from '../../@types/IAuthors';
-
-export enum Status {
-  LOADING = 'loading',
-  SUCCESS = 'completed',
-  ERROR = 'error',
-}
+import { IAuthors } from '../../@types/IAuthors'
 
 export type State = {
-  authorsList: IAuthors[];
-  status: string;
-  error: string;
-};
+	authorsList: IAuthors[]
+	status: 'init' | 'loading' | 'error' | 'success'
+}
