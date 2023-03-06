@@ -9,7 +9,7 @@ import { IRegistration } from '../../@types/IAuth'
 import { registerUser } from '../../store/user/asyncActions'
 
 import { useAppDispatch } from '../../hooks/redux.hooks'
-import { ROUTES } from '../../router/_Routes'
+import { ROUTES } from '../../router/ROUTES'
 
 export const Register: React.FC = () => {
 	const navigate = useNavigate()
@@ -71,12 +71,12 @@ export const Register: React.FC = () => {
 					<div className='invalid-feedback'>{errors.password?.message}</div>
 
 					<Button type='submit' colorScheme='teal' mb={8}>
-						Registar
+						Register
 					</Button>
 
 					<Text mb={6}>
 						If you have an account you can{' '}
-						<Button as={Link} to='/login'>
+						<Button as={Link} to={ROUTES.login}>
 							Login
 						</Button>
 					</Text>

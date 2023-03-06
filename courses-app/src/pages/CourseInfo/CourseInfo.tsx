@@ -19,6 +19,7 @@ import { IAuthors } from '../../@types/IAuthors'
 import { formatDate, toHoursAndMinutes } from '../../helpers'
 
 import { useAppSelector } from '../../hooks/redux.hooks'
+import { ROUTES } from '../../router/ROUTES'
 
 export const CourseInfo: React.FC = () => {
 	const { courseId } = useParams()
@@ -40,7 +41,7 @@ export const CourseInfo: React.FC = () => {
 	return (
 		<>
 			<Card m={'20px'}>
-				<Button as={NavLink} to='/'>
+				<Button as={NavLink} to={ROUTES.main}>
 					Go back
 				</Button>
 				<Flex>

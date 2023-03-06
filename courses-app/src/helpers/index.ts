@@ -1,2 +1,2 @@
-export * from './formatDate'
-export * from './toHoursAndMinutes'
+export { formatDate } from './formatDate'
+export { toHoursAndMinutes } from './toHoursAndMinutes'

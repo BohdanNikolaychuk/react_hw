@@ -36,11 +36,9 @@ export const CourseCard = ({
 		if (courseAuthors) {
 			return courseAuthors.map((AuthorId, index) => {
 				const author = authors.find(author => author.id === AuthorId)
-
 				if (!author) {
 					return ''
 				}
-
 				if (index === courseAuthors.length - 1) {
 					return author.name
 				}
@@ -49,7 +47,7 @@ export const CourseCard = ({
 		}
 	}
 
-	const PermitionForButtons = (role: string) => {
+	const permissionForButtons = (role: string) => {
 		if (role === 'admin') {
 			return (
 				<>
@@ -92,7 +90,7 @@ export const CourseCard = ({
 						<Button as={Link} to={`/course/${id}`}>
 							Show course
 						</Button>
-						{PermitionForButtons(role!)}
+						{permissionForButtons(role!)}
 					</Box>
 				</CardBody>
 			</Flex>

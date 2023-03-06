@@ -9,7 +9,7 @@ import {
 	FormLabel,
 	Input,
 	Text,
-	Textarea,
+	Textarea
 } from '@chakra-ui/react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 // helpers
@@ -22,14 +22,14 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks'
 import { FetchAddAuthors } from '../../store/authors/asyncActions'
 import {
 	FetchAddCourse,
-	FetchCourseUpdate,
+	FetchCourseUpdate
 } from '../../store/courses/asyncActions'
 // CONST
 
 import { Authors } from '../../components/Authors/Authors'
 
 import { toHoursAndMinutes } from '../../helpers'
-import { ROUTES } from '../../router/_Routes'
+import { ROUTES } from '../../router/ROUTES'
 import { selectIdEntity } from '../../store/courses/selectors'
 
 type ChooseForm = {
@@ -71,23 +71,25 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 
 	//function
 
-	let handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+	let handlerTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		let inputValue = e.target.value
 		setTitle(inputValue)
 	}
-	let handleDescriptionChange = (
+	let handlerDescriptionChange = (
 		e: React.ChangeEvent<HTMLTextAreaElement>
 	): void => {
 		let inputValue = e.target.value
 		setDescription(inputValue)
 	}
 
-	let handleAuthorsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+	let handlerAuthorsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		let inputValue = e.target.value
 		setNewAuthorName(inputValue)
 	}
 
-	let handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+	let handlerDurationChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	): void => {
 		let inputValue = e.target.value
 		setDuration(+inputValue)
 	}
@@ -171,7 +173,7 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 		})
 	}
 
-	const hendelSelectedAuthors = (selectedAuthors: IAuthors[]) => {
+	const handlerSelectedAuthors = (selectedAuthors: IAuthors[]) => {
 		if (selectedAuthors.length === 0) {
 			return <Text align='center'>Authors list is empty</Text>
 		}
@@ -201,12 +203,12 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 				<FormLabel>Title</FormLabel>
 				<Flex minWidth='max-content' justify={'space-between'}>
 					<Input
-						onChange={handleTitleChange}
+						onChange={handlerTitleChange}
 						value={title}
 						maxW='30%'
 						placeholder='Title'
 					/>
-					<Button as={NavLink} to='/'>
+					<Button as={NavLink} to={ROUTES.main}>
 						To Main
 					</Button>
 					{ChooseButton}
@@ -217,7 +219,7 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 				<FormLabel>Description</FormLabel>
 				<Textarea
 					value={description}
-					onChange={handleDescriptionChange}
+					onChange={handlerDescriptionChange}
 					placeholder='Description'
 					size='sm'
 				/>
@@ -228,7 +230,7 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 					<FormControl>
 						<FormLabel> Author name</FormLabel>
 						<Input
-							onChange={handleAuthorsChange}
+							onChange={handlerAuthorsChange}
 							value={newAuthorName}
 							placeholder='Author name '
 						/>
@@ -240,7 +242,7 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 
 						<Input
 							value={duration}
-							onChange={handleDurationChange}
+							onChange={handlerDurationChange}
 							placeholder='Duration'
 						/>
 
@@ -257,7 +259,7 @@ export const CourseFrom = ({ value }: ChooseForm) => {
 					<Text pt='5' align='center'>
 						Course Authors
 					</Text>
-					{hendelSelectedAuthors(selectedAuthors)}
+					{handlerSelectedAuthors(selectedAuthors)}
 				</Box>
 			</Flex>
 		</Container>

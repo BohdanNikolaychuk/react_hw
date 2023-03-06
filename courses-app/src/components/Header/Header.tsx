@@ -5,7 +5,7 @@ import { Logo } from './components/Logo/Logo'
 import { LogOut } from '../../store/user/asyncActions'
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks'
-import { ROUTES } from '../../router/_Routes'
+import { ROUTES } from '../../router/ROUTES'
 
 export default function Header() {
 	const isAuth = useAppSelector(state => state.auth.isAuth)
@@ -16,6 +16,40 @@ export default function Header() {
 	const logOut = () => {
 		dispatch(LogOut())
 		navigate(ROUTES.courses)
+	}
+
+	const renderButton = (isAuth: boolean | null) => {
+		if (isAuth) {
+			return (
+				<Stack
+					flex={{ base: 1, md: 0 }}
+					justify={'flex-end'}
+					direction={'row'}
+					spacing={6}
+				>
+					<Text p={2}>{userName}</Text>
+					<Button onClick={logOut}>LogOut</Button>
+				</Stack>
+			)
+		}
+
+		if (!isAuth) {
+			return (
+				<Stack
+					flex={{ base: 1, md: 0 }}
+					justify={'flex-end'}
+					direction={'row'}
+					spacing={6}
+				>
+					<Button as={NavLink} to={ROUTES.login}>
+						Login
+					</Button>
+					<Button as={NavLink} to={ROUTES.register}>
+						Register
+					</Button>
+				</Stack>
+			)
+		}
 	}
 
 	return (
@@ -33,36 +67,7 @@ export default function Header() {
 						<Logo></Logo>
 					</NavLink>
 				</Flex>
-
-				{isAuth ? (
-					<>
-						<Text p={2}>{userName}</Text>
-						<Stack
-							flex={{ base: 1, md: 0 }}
-							justify={'flex-end'}
-							direction={'row'}
-							spacing={6}
-						>
-							<Button onClick={logOut}>LogOut</Button>
-						</Stack>
-					</>
-				) : (
-					<>
-						<Stack
-							flex={{ base: 1, md: 0 }}
-							justify={'flex-end'}
-							direction={'row'}
-							spacing={6}
-						>
-							<Button as={NavLink} to='/login'>
-								Login
-							</Button>
-							<Button as={NavLink} to='/register'>
-								Register
-							</Button>
-						</Stack>
-					</>
-				)}
+				{renderButton(isAuth)}
 			</Flex>
 		</Box>
 	)
